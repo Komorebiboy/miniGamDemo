@@ -1,0 +1,24 @@
+{
+  "id": "roguelike-card-rpg",
+  "name": "Roguelike卡牌RPG",
+  "type": "wechat-game",
+  "version": "3.8.0",
+  "creator": {
+    "version": "3.8.0"
+  },
+  "scripts": {
+    "compile": "tsc --build",
+    "build": "echo 'Building project...'"
+  },
+  "dependencies": {
+    "cc": "*"
+  },
+  "settings": {
+    "physics": {
+      "enabled": false
+    },
+    "rendering": {
+      "renderMode": "2d"
+    }
+  }
+}

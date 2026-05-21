@@ -1,0 +1,46 @@
+<view class="container">
+  <view class="game-header">
+    <text class="title">Roguelike卡牌RPG</text>
+    <text class="subtitle">策略与运气的对决</text>
+  </view>
+
+  <view class="hero-section">
+    <view class="hero-avatar"></view>
+    <text class="hero-name">勇者</text>
+    <view class="hero-stats">
+      <text class="stat">HP: 80/80</text>
+      <text class="stat">能量: 3/3</text>
+    </view>
+  </view>
+
+  <view class="menu-grid">
+    <view class="menu-item" bindtap="startAdventure">
+      <view class="menu-icon adventure"></view>
+      <text class="menu-title">开始冒险</text>
+      <text class="menu-desc">进入Roguelike地牢</text>
+    </view>
+
+    <view class="menu-item" bindtap="viewDeck">
+      <view class="menu-icon deck"></view>
+      <text class="menu-title">卡组编辑</text>
+      <text class="menu-desc">管理你的卡牌</text>
+    </view>
+
+    <view class="menu-item" bindtap="viewAchievements">
+      <view class="menu-icon achievement"></view>
+      <text class="menu-title">成就</text>
+      <text class="menu-desc">查看解锁成就</text>
+    </view>
+
+    <view class="menu-item" bindtap="openSettings">
+      <view class="menu-icon settings"></view>
+      <text class="menu-title">设置</text>
+      <text class="menu-desc">游戏选项</text>
+    </view>
+  </view>
+
+  <view class="game-info">
+    <text class="version">v1.0.0</text>
+    <text class="credit">Cocos Creator 3.x + TypeScript</text>
+  </view>
+</view>

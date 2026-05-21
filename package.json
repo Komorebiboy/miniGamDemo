@@ -1,0 +1,21 @@
+{
+  "name": "roguelike-card-rpg",
+  "version": "1.0.0",
+  "description": "Roguelike卡牌RPG微信小游戏",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Build command for Cocos Creator'",
+    "preview": "echo 'Preview command'"
+  },
+  "keywords": [
+    "cocos-creator",
+    "wechat-game",
+    "roguelike",
+    "card-game",
+    "rpg"
+  ],
+  "author": "Game Developer",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

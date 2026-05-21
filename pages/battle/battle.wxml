@@ -1,0 +1,199 @@
+<view class="battle-container">
+  <!-- 战斗信息栏 -->
+  <view class="battle-header">
+    <text class="turn-info">回合 {{turnNumber}}</text>
+    <text class="phase-info">{{phaseText}}</text>
+  </view>
+
+  <!-- 敌人区域 -->
+  <view class="enemy-area">
+    <view class="entity-card enemy">
+      <view class="entity-avatar enemy-avatar"></view>
+      <view class="entity-info">
+        <text class="entity-name">{{enemyName}}</text>
+        <view class="hp-bar">
+          <view class="hp-fill enemy-hp" style="width: {{enemyHpPercent}}%"></view>
+          <text class="hp-text">{{enemyHp}}/{{enemyMaxHp}}</text>
+        </view>
+        <view class="energy-bar">
+          <text class="energy-text">能量: {{enemyEnergy}}/{{enemyMaxEnergy}}</text>
+        </view>
+        <view class="shield-bar" wx:if="{{enemyShield > 0}}">
+          <text class="shield-text">护盾: {{enemyShield}}</text>
+        </view>
+        <view class="effects-row">
+          <text class="effect-tag" wx:for="{{enemyEffects}}" wx:key="index">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 敌人卡牌区域 -->
+    <view class="card-slot enemy-slot">
+      <view class="card-back" wx:if="{{!showEnemyCard}}"></view>
+      <view class="card-revealed" wx:if="{{showEnemyCard && enemySelectedCard}}">
+        <text class="card-name">{{enemySelectedCard.name}}</text>
+        <text class="card-value">{{enemyFinalValue}}</text>
+        <text class="card-detail">基础{{enemySelectedCard.baseValue}} + Roll{{enemyRoll}}</text>
+        <view class="crit-badge" wx:if="{{enemyIsCrit}}">暴击!</view>
+        <view class="dodge-badge" wx:if="{{enemyIsDodge}}">闪避!</view>
+      </view>
+      <text class="empty-text" wx:if="{{showEnemyCard && !enemySelectedCard}}">跳过</text>
+    </view>
+  </view>
+
+  <!-- 战斗舞台（Roll点显示） -->
+  <view class="battle-stage">
+    <view class="roll-display" wx:if="{{showRollAnimation}}">
+      <view class="roll-box player-roll">
+        <text class="roll-label">玩家</text>
+        <text class="roll-number {{playerRollClass}}">{{displayPlayerRoll}}</text>
+      </view>
+      <text class="vs-text">VS</text>
+      <view class="roll-box enemy-roll">
+        <text class="roll-label">敌人</text>
+        <text class="roll-number {{enemyRollClass}}">{{displayEnemyRoll}}</text>
+      </view>
+    </view>
+
+    <view class="final-values" wx:if="{{showFinalValues}}">
+      <view class="final-box">
+        <text class="final-label">玩家最终值</text>
+        <text class="final-number {{winner === 'PLAYER' ? 'winner' : ''}}">{{playerFinalValue}}</text>
+        <view class="value-breakdown">
+          <text>基础: {{playerBaseValue}}</text>
+          <text>Roll: {{playerRoll}}</text>
+          <text wx:if="{{playerBuffBonus > 0}}">Buff: +{{playerBuffBonus}}</text>
+          <text wx:if="{{playerSpeedBonus > 0}}">速度: +{{playerSpeedBonus}}</text>
+        </view>
+      </view>
+      <view class="final-box">
+        <text class="final-label">敌人最终值</text>
+        <text class="final-number {{winner === 'ENEMY' ? 'winner' : ''}}">{{enemyFinalValue}}</text>
+        <view class="value-breakdown">
+          <text>基础: {{enemyBaseValue}}</text>
+          <text>Roll: {{enemyRoll}}</text>
+          <text wx:if="{{enemyBuffBonus > 0}}">Buff: +{{enemyBuffBonus}}</text>
+          <text wx:if="{{enemySpeedBonus > 0}}">速度: +{{enemySpeedBonus}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="result-display" wx:if="{{showResult}}">
+      <text class="result-text {{resultClass}}">{{resultText}}</text>
+      <text class="damage-text" wx:if="{{damageDealt > 0}}">造成 {{damageDealt}} 点伤害!</text>
+    </view>
+  </view>
+
+  <!-- 玩家区域 -->
+  <view class="player-area">
+    <!-- 玩家卡牌区域 -->
+    <view class="card-slot player-slot">
+      <view class="card-selected" wx:if="{{playerSelectedCard && !showPlayerCard}}">
+        <text class="selected-text">已选择</text>
+        <text class="card-name">{{playerSelectedCard.name}}</text>
+      </view>
+      <view class="card-revealed" wx:if="{{showPlayerCard && playerSelectedCard}}">
+        <text class="card-name">{{playerSelectedCard.name}}</text>
+        <text class="card-value">{{playerFinalValue}}</text>
+        <text class="card-detail">基础{{playerSelectedCard.baseValue}} + Roll{{playerRoll}}</text>
+        <view class="crit-badge" wx:if="{{playerIsCrit}}">暴击!</view>
+        <view class="dodge-badge" wx:if="{{playerIsDodge}}">闪避!</view>
+      </view>
+      <text class="empty-text" wx:if="{{showPlayerCard && !playerSelectedCard}}">跳过</text>
+    </view>
+
+    <view class="entity-card player">
+      <view class="entity-info">
+        <text class="entity-name">{{playerName}}</text>
+        <view class="hp-bar">
+          <view class="hp-fill player-hp" style="width: {{playerHpPercent}}%"></view>
+          <text class="hp-text">{{playerHp}}/{{playerMaxHp}}</text>
+        </view>
+        <view class="energy-bar">
+          <text class="energy-text">能量: {{playerEnergy}}/{{playerMaxEnergy}}</text>
+        </view>
+        <view class="shield-bar" wx:if="{{playerShield > 0}}">
+          <text class="shield-text">护盾: {{playerShield}}</text>
+        </view>
+        <view class="effects-row">
+          <text class="effect-tag" wx:for="{{playerEffects}}" wx:key="index">{{item}}</text>
+        </view>
+      </view>
+      <view class="entity-avatar player-avatar"></view>
+    </view>
+  </view>
+
+  <!-- 手牌区域 -->
+  <view class="hand-area">
+    <text class="hand-title">手牌 ({{handCards.length}})</text>
+    <scroll-view class="hand-scroll" scroll-x="true">
+      <view class="hand-cards">
+        <view 
+          class="hand-card {{item.selected ? 'selected' : ''}} {{item.disabled ? 'disabled' : ''}}"
+          wx:for="{{handCards}}"
+          wx:key="instanceId"
+          data-card="{{item}}"
+          bindtap="onCardTap"
+        >
+          <view class="card-cost">{{item.data.energyCost}}</view>
+          <view class="card-content">
+            <text class="card-type-icon">{{item.typeIcon}}</text>
+            <text class="card-name">{{item.data.name}}</text>
+            <text class="card-base">{{item.data.baseValue}}</text>
+            <text class="card-roll">{{item.data.rollRange.min}}-{{item.data.rollRange.max}}</text>
+            <text class="card-speed">速{{item.data.speed}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-area">
+    <button 
+      class="action-btn confirm-btn {{canConfirm ? '' : 'disabled'}}"
+      bindtap="onConfirmTap"
+      disabled="{{!canConfirm}}"
+    >
+      确认出牌
+    </button>
+    <button 
+      class="action-btn skip-btn"
+      bindtap="onSkipTap"
+      disabled="{{hasConfirmed}}"
+    >
+      跳过回合
+    </button>
+  </view>
+
+  <!-- 战斗日志 -->
+  <view class="battle-log">
+    <scroll-view class="log-scroll" scroll-y="true" scroll-into-view="{{lastLogId}}">
+      <view class="log-entries">
+        <view 
+          class="log-entry {{item.type}}"
+          wx:for="{{battleLog}}"
+          wx:key="id"
+          id="{{item.id}}"
+        >
+          <text class="log-time">{{item.time}}</text>
+          <text class="log-text">{{item.text}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 战斗结束弹窗 -->
+  <view class="modal" wx:if="{{showBattleEndModal}}">
+    <view class="modal-content">
+      <text class="modal-title">{{battleEndTitle}}</text>
+      <text class="modal-text">{{battleEndText}}</text>
+      <view class="modal-stats">
+        <text>回合数: {{turnNumber}}</text>
+        <text>剩余生命: {{playerHp}}/{{playerMaxHp}}</text>
+      </view>
+      <button class="modal-btn" bindtap="onReturnToMenu">返回主菜单</button>
+      <button class="modal-btn secondary" bindtap="onRestartBattle">重新开始</button>
+    </view>
+  </view>
+</view>

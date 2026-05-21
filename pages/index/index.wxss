@@ -1,0 +1,162 @@
+page {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 游戏标题区域 */
+.game-header {
+  text-align: center;
+  margin-bottom: 60rpx;
+  margin-top: 40rpx;
+}
+
+.title {
+  display: block;
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 0 20rpx rgba(255, 215, 0, 0.5);
+  margin-bottom: 20rpx;
+  letter-spacing: 4rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #a0a0a0;
+  letter-spacing: 2rpx;
+}
+
+/* 英雄区域 */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
+  padding: 40rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20rpx;
+  border: 2rpx solid rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(10rpx);
+}
+
+.hero-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(145deg, #ffd700, #ff8c00);
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+  box-shadow: 0 0 30rpx rgba(255, 215, 0, 0.4);
+}
+
+.hero-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20rpx;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40rpx;
+}
+
+.stat {
+  font-size: 24rpx;
+  color: #a0a0a0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+}
+
+/* 菜单网格 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30rpx;
+  width: 100%;
+  margin-bottom: 60rpx;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 30rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s;
+}
+
+.menu-item:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.95);
+}
+
+.menu-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.menu-icon.adventure {
+  background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
+  box-shadow: 0 0 20rpx rgba(255, 107, 107, 0.4);
+}
+
+.menu-icon.deck {
+  background: linear-gradient(145deg, #4ecdc4, #44a08d);
+  box-shadow: 0 0 20rpx rgba(78, 205, 196, 0.4);
+}
+
+.menu-icon.achievement {
+  background: linear-gradient(145deg, #ffd93d, #ff9f1c);
+  box-shadow: 0 0 20rpx rgba(255, 217, 61, 0.4);
+}
+
+.menu-icon.settings {
+  background: linear-gradient(145deg, #a8a8a8, #6a6a6a);
+  box-shadow: 0 0 20rpx rgba(168, 168, 168, 0.4);
+}
+
+.menu-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10rpx;
+}
+
+.menu-desc {
+  font-size: 22rpx;
+  color: #808080;
+}
+
+/* 游戏信息 */
+.game-info {
+  margin-top: auto;
+  text-align: center;
+}
+
+.version {
+  display: block;
+  font-size: 24rpx;
+  color: #606060;
+  margin-bottom: 10rpx;
+}
+
+.credit {
+  display: block;
+  font-size: 20rpx;
+  color: #404040;
+}
