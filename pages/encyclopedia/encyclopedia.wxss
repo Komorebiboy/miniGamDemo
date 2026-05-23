@@ -1,0 +1,966 @@
+/* 命运赌局 - 卡牌百科样式 */
+
+.encyclopedia-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0D0D0D 0%, #1a0a0a 50%, #0D0D0D 100%);
+  padding: 30rpx 20rpx 120rpx;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ==================== 页面标题 ==================== */
+.page-header {
+  text-align: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx 0;
+}
+
+.page-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 10rpx;
+  letter-spacing: 4rpx;
+}
+
+.page-subtitle {
+  font-size: 24rpx;
+  color: var(--color-light-gray);
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+/* ==================== 标签栏 ==================== */
+.tab-bar {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16rpx;
+  padding: 10rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15rpx 20rpx;
+  border-radius: 12rpx;
+  color: var(--color-light-gray);
+  font-size: 24rpx;
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-deep-red));
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.4);
+}
+
+.tab-icon {
+  font-size: 32rpx;
+  margin-bottom: 5rpx;
+}
+
+.tab-text {
+  font-size: 22rpx;
+}
+
+/* ==================== 内容区域 ==================== */
+.content-section {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ==================== 职业选择器 ==================== */
+.class-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15rpx;
+  margin-bottom: 25rpx;
+}
+
+.class-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 15rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.class-tab.active {
+  transform: scale(1.02);
+}
+
+.gambler-tab.active {
+  border-color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.3);
+}
+
+.magician-tab.active {
+  border-color: var(--color-neon-purple);
+  background: rgba(138, 43, 226, 0.1);
+  box-shadow: 0 0 15rpx rgba(138, 43, 226, 0.3);
+}
+
+.executioner-tab.active {
+  border-color: #475569;
+  background: rgba(71, 85, 105, 0.1);
+  box-shadow: 0 0 15rpx rgba(71, 85, 105, 0.3);
+}
+
+.maniac-tab.active {
+  border-color: var(--color-crazy-red);
+  background: rgba(255, 46, 99, 0.1);
+  box-shadow: 0 0 15rpx rgba(255, 46, 99, 0.3);
+}
+
+.class-tab-icon {
+  font-size: 40rpx;
+  margin-bottom: 8rpx;
+}
+
+.class-tab-name {
+  font-size: 24rpx;
+  color: var(--color-light-gray);
+}
+
+.class-tab.active .class-tab-name {
+  color: white;
+  font-weight: bold;
+}
+
+/* ==================== 职业信息卡片 ==================== */
+.class-info-card {
+  background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 25rpx;
+  border: 2rpx solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.1);
+}
+
+.class-info-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.class-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  border: 3rpx solid;
+}
+
+.gambler-avatar {
+  background: linear-gradient(145deg, var(--color-gold), #B8860B);
+  border-color: var(--color-gold);
+  box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.4);
+}
+
+.magician-avatar {
+  background: linear-gradient(145deg, var(--color-neon-purple), #4B0082);
+  border-color: var(--color-neon-purple);
+  box-shadow: 0 0 15rpx rgba(138, 43, 226, 0.4);
+}
+
+.executioner-avatar {
+  background: linear-gradient(145deg, #475569, #1f2937);
+  border-color: #475569;
+  box-shadow: 0 0 15rpx rgba(71, 85, 105, 0.4);
+}
+
+.maniac-avatar {
+  background: linear-gradient(145deg, var(--color-crazy-red), #8B0000);
+  border-color: var(--color-crazy-red);
+  box-shadow: 0 0 15rpx rgba(255, 46, 99, 0.4);
+}
+
+.class-avatar-icon {
+  font-size: 40rpx;
+}
+
+.class-info-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.class-info-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 5rpx;
+}
+
+.class-info-title {
+  font-size: 22rpx;
+  color: var(--color-gold);
+}
+
+.class-info-desc {
+  font-size: 26rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 20rpx;
+  display: block;
+  line-height: 1.5;
+}
+
+.class-info-stats {
+  display: flex;
+  gap: 30rpx;
+}
+
+.info-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12rpx;
+}
+
+.info-stat-label {
+  font-size: 20rpx;
+  color: var(--color-gray);
+  margin-bottom: 5rpx;
+}
+
+.info-stat-value {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+}
+
+/* ==================== 分区标题 ==================== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30rpx 0 20rpx;
+  padding-left: 20rpx;
+  border-left: 6rpx solid var(--color-gold);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+}
+
+.section-count {
+  font-size: 22rpx;
+  color: var(--color-gray);
+}
+
+/* ==================== 卡牌网格 ==================== */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15rpx;
+}
+
+.card-item {
+  background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  border: 2rpx solid var(--color-dark-gray);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card-item:active {
+  transform: scale(0.98);
+}
+
+.card-item.selected {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.3);
+}
+
+/* 稀有度样式 */
+.card-item.common {
+  border-color: #808080;
+}
+
+.card-item.uncommon {
+  border-color: #00d4ff;
+  box-shadow: 0 0 10rpx rgba(0, 212, 255, 0.2);
+}
+
+.card-item.rare {
+  border-color: #bf00ff;
+  box-shadow: 0 0 10rpx rgba(191, 0, 255, 0.2);
+}
+
+.card-item.legendary,
+.card-item.finisher {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.3);
+}
+
+.card-rarity-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rpx;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.6;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.card-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.card-item-icon {
+  font-size: 32rpx;
+}
+
+.card-item-cost {
+  width: 28rpx;
+  height: 28rpx;
+  border-radius: 50%;
+  background: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-item-cost text {
+  font-size: 16rpx;
+  font-weight: bold;
+  color: black;
+}
+
+.card-item-name {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: white;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.card-item-desc {
+  font-size: 20rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 12rpx;
+  display: block;
+  line-height: 1.4;
+}
+
+.card-item-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.item-stat {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.item-stat-icon {
+  font-size: 18rpx;
+}
+
+.item-stat-value {
+  font-size: 20rpx;
+  color: var(--color-gold);
+  font-weight: bold;
+}
+
+.card-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6rpx;
+}
+
+.item-tag {
+  font-size: 16rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 6rpx;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-light-gray);
+}
+
+.item-tag.common-tag {
+  background: rgba(128, 128, 128, 0.2);
+  color: #808080;
+}
+
+.item-tag.uncommon-tag {
+  background: rgba(0, 212, 255, 0.2);
+  color: #00d4ff;
+}
+
+.item-tag.rare-tag {
+  background: rgba(191, 0, 255, 0.2);
+  color: #bf00ff;
+}
+
+.item-tag.legendary-tag,
+.item-tag.finisher-tag {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--color-gold);
+}
+
+.item-tag.risk-tag.safe {
+  background: rgba(0, 255, 128, 0.2);
+  color: #00ff80;
+}
+
+.item-tag.risk-tag.moderate {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.item-tag.risk-tag.high {
+  background: rgba(255, 0, 64, 0.2);
+  color: #ff0040;
+}
+
+.item-tag.risk-tag.extreme {
+  background: linear-gradient(90deg, rgba(255, 0, 64, 0.3) 0%, rgba(191, 0, 255, 0.3) 100%);
+  color: white;
+}
+
+.item-tag.archetype-tag {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--color-gold);
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+}
+
+/* ==================== 敌人网格 ==================== */
+.enemy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.enemy-card {
+  background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border-radius: 16rpx;
+  padding: 25rpx;
+  border: 2rpx solid rgba(255, 0, 64, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.enemy-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.enemy-card-icon {
+  font-size: 48rpx;
+  margin-right: 15rpx;
+}
+
+.enemy-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.enemy-card-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.enemy-card-faction {
+  font-size: 20rpx;
+  color: var(--color-deep-red);
+}
+
+.enemy-card-desc {
+  font-size: 24rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 15rpx;
+  display: block;
+  line-height: 1.4;
+}
+
+.enemy-card-stats {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 15rpx;
+}
+
+.enemy-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8rpx 15rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10rpx;
+  min-width: 80rpx;
+}
+
+.enemy-stat-label {
+  font-size: 18rpx;
+  color: var(--color-gray);
+  margin-bottom: 4rpx;
+}
+
+.enemy-stat-value {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+}
+
+.enemy-card-abilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.ability-tag {
+  font-size: 18rpx;
+  padding: 6rpx 12rpx;
+  background: rgba(138, 43, 226, 0.2);
+  border-radius: 8rpx;
+  color: var(--color-neon-purple);
+  border: 1rpx solid rgba(138, 43, 226, 0.3);
+}
+
+/* ==================== Boss列表 ==================== */
+.boss-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.boss-card {
+  background: linear-gradient(145deg, rgba(26, 26, 36, 0.9) 0%, rgba(10, 10, 15, 0.95) 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  border: 2rpx solid var(--color-neon-purple);
+  box-shadow: 0 0 25rpx rgba(138, 43, 226, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.boss-card-bg-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.boss-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.boss-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.boss-avatar-large {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--color-neon-purple), #4B0082);
+  border: 4rpx solid var(--color-neon-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  box-shadow: 0 0 20rpx rgba(138, 43, 226, 0.5);
+}
+
+.boss-avatar-icon {
+  font-size: 50rpx;
+}
+
+.boss-card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.boss-card-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 0 10rpx rgba(138, 43, 226, 0.5);
+  margin-bottom: 5rpx;
+}
+
+.boss-card-title {
+  font-size: 22rpx;
+  color: var(--color-neon-purple);
+  margin-bottom: 10rpx;
+}
+
+.boss-phase-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.phase-label {
+  font-size: 18rpx;
+  color: var(--color-gray);
+}
+
+.phase-dots {
+  display: flex;
+  gap: 8rpx;
+}
+
+.phase-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: rgba(138, 43, 226, 0.3);
+  border: 1rpx solid var(--color-neon-purple);
+  transition: all 0.3s ease;
+}
+
+.phase-dot.active {
+  background: var(--color-neon-purple);
+  box-shadow: 0 0 10rpx rgba(138, 43, 226, 0.8);
+}
+
+.boss-card-desc {
+  font-size: 26rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 20rpx;
+  display: block;
+  line-height: 1.5;
+}
+
+.boss-card-mechanic {
+  background: rgba(138, 43, 226, 0.1);
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid rgba(138, 43, 226, 0.3);
+}
+
+.mechanic-label {
+  font-size: 20rpx;
+  color: var(--color-gray);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.mechanic-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: var(--color-neon-purple);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.mechanic-desc {
+  font-size: 22rpx;
+  color: var(--color-light-gray);
+  line-height: 1.4;
+}
+
+.boss-faction {
+  margin-top: 8rpx;
+}
+
+.faction-tag {
+  font-size: 18rpx;
+  padding: 4rpx 12rpx;
+  background: rgba(138, 43, 226, 0.2);
+  border-radius: 8rpx;
+  color: var(--color-neon-purple);
+  border: 1rpx solid rgba(138, 43, 226, 0.3);
+}
+
+.boss-phases {
+  margin: 20rpx 0;
+  padding: 20rpx;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.phases-label {
+  font-size: 22rpx;
+  color: var(--color-gold);
+  font-weight: bold;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.phase-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.phase-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15rpx;
+  padding: 12rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10rpx;
+  border-left: 4rpx solid var(--color-dark-gray);
+  transition: all 0.3s ease;
+}
+
+.phase-item.active {
+  border-left-color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.phase-number {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: var(--color-dark-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  font-weight: bold;
+  color: white;
+  flex-shrink: 0;
+}
+
+.phase-item.active .phase-number {
+  background: var(--color-gold);
+  color: black;
+}
+
+.phase-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.phase-name {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.phase-hp {
+  font-size: 20rpx;
+  color: var(--color-deep-red);
+}
+
+.phase-desc {
+  font-size: 20rpx;
+  color: var(--color-light-gray);
+  line-height: 1.4;
+}
+
+.boss-card-stats {
+  display: flex;
+  gap: 20rpx;
+}
+
+.boss-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12rpx;
+  min-width: 100rpx;
+}
+
+.boss-stat-label {
+  font-size: 20rpx;
+  color: var(--color-gray);
+  margin-bottom: 5rpx;
+}
+
+.boss-stat-value {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+}
+
+.boss-stat-value.hard-text {
+  color: #ff6b6b;
+}
+
+.boss-stat-value.extreme-text {
+  color: #ff0040;
+  text-shadow: 0 0 10rpx rgba(255, 0, 64, 0.5);
+}
+
+.boss-stat-value.nightmare-text {
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 10rpx rgba(138, 43, 226, 0.5);
+}
+
+/* ==================== 遗物网格 ==================== */
+.relic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15rpx;
+}
+
+.relic-card {
+  background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  border: 2rpx solid var(--color-dark-gray);
+  position: relative;
+  overflow: hidden;
+}
+
+.relic-card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rpx;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.6;
+}
+
+.relic-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.relic-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.relic-card-icon {
+  font-size: 40rpx;
+  margin-right: 12rpx;
+}
+
+.relic-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.relic-card-name {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.relic-card-rarity {
+  font-size: 18rpx;
+}
+
+.relic-card-rarity.common-text {
+  color: #808080;
+}
+
+.relic-card-rarity.uncommon-text {
+  color: #00d4ff;
+}
+
+.relic-card-rarity.rare-text {
+  color: #bf00ff;
+}
+
+.relic-card-rarity.legendary-text {
+  color: var(--color-gold);
+}
+
+.relic-card-desc {
+  font-size: 20rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 10rpx;
+  display: block;
+  line-height: 1.4;
+}
+
+.relic-card-flavor {
+  font-size: 18rpx;
+  color: var(--color-gray);
+  font-style: italic;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.relic-unlock {
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 8rpx;
+  padding: 10rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.unlock-label {
+  font-size: 18rpx;
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 5rpx;
+}
+
+.unlock-text {
+  font-size: 18rpx;
+  color: var(--color-light-gray);
+}
+
+/* ==================== 返回按钮 ==================== */
+.back-section {
+  margin-top: 40rpx;
+  margin-bottom: 60rpx;
+  padding-bottom: 40rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.back-btn {
+  width: 80%;
+  max-width: 400rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  letter-spacing: 4rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #B3001B 0%, #D4AF37 100%);
+  border: 2rpx solid var(--color-gold);
+  color: white;
+  border-radius: 44rpx;
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.3);
+}
+
+/* ==================== 动画 ==================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}

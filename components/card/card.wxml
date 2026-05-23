@@ -1,0 +1,72 @@
+<!-- 命运赌局 - 卡牌组件 -->
+<view class="card-component {{rarity}} {{selected ? 'selected' : ''}} {{exhausted ? 'exhausted' : ''}} {{flipped ? 'flipped' : ''}}" 
+      bindtap="onCardTap"
+      style="width: {{width}}rpx; height: {{height}}rpx;">
+  
+  <!-- 卡牌正面 -->
+  <view class="card-front">
+    <!-- 费用徽章 -->
+    <view class="cost-badge" wx:if="{{showCost && cost > 0}}">
+      <text class="cost-text">{{cost}}</text>
+    </view>
+    
+    <!-- 稀有度指示器 -->
+    <view class="rarity-indicator">
+      <view class="rarity-glow"></view>
+    </view>
+    
+    <!-- 卡牌图标 -->
+    <view class="card-icon-area">
+      <text class="card-icon">{{icon}}</text>
+    </view>
+    
+    <!-- 卡牌名称 -->
+    <text class="card-name">{{name}}</text>
+    
+    <!-- 卡牌类型 -->
+    <text class="card-type" wx:if="{{showType}}">{{typeText}}</text>
+    
+    <!-- 属性区域 -->
+    <view class="card-stats">
+      <view class="stat-item" wx:if="{{rollRange}}">
+        <text class="stat-icon">🎲</text>
+        <text class="stat-value">{{rollRange}}</text>
+      </view>
+      <view class="stat-item" wx:if="{{speed > 0}}">
+        <text class="stat-icon">⚡</text>
+        <text class="stat-value">{{speed}}</text>
+      </view>
+    </view>
+    
+    <!-- 效果预览 -->
+    <view class="card-effects" wx:if="{{effects && effects.length > 0}}">
+      <text class="effect-text" wx:for="{{effects}}" wx:key="index">{{item}}</text>
+    </view>
+    
+    <!-- 标签 -->
+    <view class="card-tags" wx:if="{{tags && tags.length > 0}}">
+      <text class="tag" wx:for="{{tags}}" wx:key="index">{{item}}</text>
+    </view>
+    
+    <!-- 风险等级 -->
+    <view class="risk-badge {{riskLevel}}" wx:if="{{showRisk && riskLevel}}">
+      <text>{{riskText}}</text>
+    </view>
+  </view>
+  
+  <!-- 卡牌背面 -->
+  <view class="card-back">
+    <view class="back-pattern"></view>
+    <text class="back-symbol">?</text>
+  </view>
+  
+  <!-- 选中效果 -->
+  <view class="selection-glow" wx:if="{{selected}}"></view>
+  
+  <!-- 传奇卡牌特效 -->
+  <view class="legendary-effects" wx:if="{{rarity === 'legendary'}}">
+    <view class="sparkle sparkle-1"></view>
+    <view class="sparkle sparkle-2"></view>
+    <view class="sparkle sparkle-3"></view>
+  </view>
+</view>

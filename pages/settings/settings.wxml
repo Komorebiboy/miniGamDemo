@@ -1,0 +1,296 @@
+<!-- 命运赌局 - 设置页面 -->
+<view class="settings-container bg-pattern">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title text-glow">⚙️ 游戏设置</text>
+    <text class="page-subtitle">调整你的游戏体验</text>
+    <view class="divider"></view>
+  </view>
+
+  <!-- 音频设置 -->
+  <view class="settings-section">
+    <view class="section-header">
+      <text class="section-icon">🔊</text>
+      <text class="section-title">音频设置</text>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">背景音乐</text>
+        <text class="setting-desc">开启/关闭游戏背景音乐</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.bgmEnabled}}" bindchange="toggleSetting" data-key="bgmEnabled" color="#D4AF37"/>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">游戏音效</text>
+        <text class="setting-desc">开启/关闭战斗音效和UI音效</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.sfxEnabled}}" bindchange="toggleSetting" data-key="sfxEnabled" color="#D4AF37"/>
+    </view>
+    
+    <view class="setting-item" wx:if="{{settings.bgmEnabled}}">
+      <view class="setting-info">
+        <text class="setting-name">音乐音量</text>
+        <text class="setting-desc">调整背景音乐音量大小</text>
+      </view>
+      <view class="slider-container">
+        <slider class="setting-slider" value="{{settings.bgmVolume}}" min="0" max="100" show-value bindchange="changeVolume" data-key="bgmVolume" activeColor="#D4AF37" block-color="#D4AF37"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游戏设置 -->
+  <view class="settings-section">
+    <view class="section-header">
+      <text class="section-icon">🎮</text>
+      <text class="section-title">游戏设置</text>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">动画效果</text>
+        <text class="setting-desc">开启/关闭战斗动画和特效</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.animationEnabled}}" bindchange="toggleSetting" data-key="animationEnabled" color="#D4AF37"/>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">屏幕震动</text>
+        <text class="setting-desc">开启/关闭战斗中的屏幕震动效果</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.screenShake}}" bindchange="toggleSetting" data-key="screenShake" color="#D4AF37"/>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">快速战斗</text>
+        <text class="setting-desc">跳过部分动画，加快战斗节奏</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.fastBattle}}" bindchange="toggleSetting" data-key="fastBattle" color="#D4AF37"/>
+    </view>
+  </view>
+
+  <!-- 显示设置 -->
+  <view class="settings-section">
+    <view class="section-header">
+      <text class="section-icon">🖥️</text>
+      <text class="section-title">显示设置</text>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">画面质量</text>
+        <text class="setting-desc">调整游戏画面质量和特效细节</text>
+      </view>
+      <view class="quality-selector">
+        <view class="quality-option {{settings.quality === 'low' ? 'active' : ''}}" bindtap="setQuality" data-quality="low">低</view>
+        <view class="quality-option {{settings.quality === 'medium' ? 'active' : ''}}" bindtap="setQuality" data-quality="medium">中</view>
+        <view class="quality-option {{settings.quality === 'high' ? 'active' : ''}}" bindtap="setQuality" data-quality="high">高</view>
+      </view>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">粒子效果</text>
+        <text class="setting-desc">开启/关闭战斗中的粒子特效</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.particlesEnabled}}" bindchange="toggleSetting" data-key="particlesEnabled" color="#D4AF37"/>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">伤害数字</text>
+        <text class="setting-desc">显示/隐藏战斗中的伤害数字</text>
+      </view>
+      <switch class="setting-switch" checked="{{settings.damageNumbers}}" bindchange="toggleSetting" data-key="damageNumbers" color="#D4AF37"/>
+    </view>
+  </view>
+
+  <!-- 数据管理 -->
+  <view class="settings-section">
+    <view class="section-header">
+      <text class="section-icon">💾</text>
+      <text class="section-title">数据管理</text>
+    </view>
+    
+    <view class="setting-item action-item" bindtap="clearSaveData">
+      <view class="setting-info">
+        <text class="setting-name">清除存档</text>
+        <text class="setting-desc">删除所有游戏进度和解锁内容（不可恢复）</text>
+      </view>
+      <text class="action-arrow">›</text>
+    </view>
+    
+    <view class="setting-item action-item" bindtap="resetTutorial">
+      <view class="setting-info">
+        <text class="setting-name">重置教程</text>
+        <text class="setting-desc">重新显示游戏教程引导</text>
+      </view>
+      <text class="action-arrow">›</text>
+    </view>
+    
+    <view class="setting-item action-item" bindtap="exportData">
+      <view class="setting-info">
+        <text class="setting-name">导出数据</text>
+        <text class="setting-desc">导出游戏数据到本地</text>
+      </view>
+      <text class="action-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 关于游戏 -->
+  <view class="settings-section">
+    <view class="section-header">
+      <text class="section-icon">ℹ️</text>
+      <text class="section-title">关于游戏</text>
+    </view>
+    
+    <view class="setting-item">
+      <view class="setting-info">
+        <text class="setting-name">游戏版本</text>
+        <text class="setting-desc">当前游戏版本号</text>
+      </view>
+      <text class="version-text">v1.0.0</text>
+    </view>
+    
+    <view class="setting-item action-item" bindtap="showCredits">
+      <view class="setting-info">
+        <text class="setting-name">制作团队</text>
+        <text class="setting-desc">查看游戏制作人员列表</text>
+      </view>
+      <text class="action-arrow">›</text>
+    </view>
+    
+    <view class="setting-item action-item" bindtap="showUserAgreement">
+      <view class="setting-info">
+        <text class="setting-name">用户协议</text>
+        <text class="setting-desc">查看用户协议和隐私政策</text>
+      </view>
+      <text class="action-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 返回按钮 -->
+  <view class="back-section">
+    <view class="back-btn btn-primary btn-glow" bindtap="goBack">
+      返回主菜单
+    </view>
+  </view>
+
+  <!-- 自定义弹窗 - 制作团队 -->
+  <view class="modal-overlay {{showCreditsModal ? 'show' : ''}}" bindtap="closeCreditsModal" wx:if="{{showCreditsModal}}">
+    <view class="modal-container credits-modal" catchtap="preventClose">
+      <!-- 弹窗头部 -->
+      <view class="modal-header">
+        <view class="modal-icon">🎮</view>
+        <text class="modal-title">制作团队</text>
+        <view class="modal-decoration"></view>
+      </view>
+      
+      <!-- 弹窗内容 -->
+      <view class="modal-body">
+        <view class="credits-section">
+          <view class="credit-item">
+            <view class="credit-role">✨ 创意策划</view>
+            <view class="credit-name highlight">虾头</view>
+          </view>
+          
+          <view class="credit-divider">
+            <view class="divider-line"></view>
+            <text class="divider-text">开发团队</text>
+            <view class="divider-line"></view>
+          </view>
+          
+          <view class="credit-item">
+            <view class="credit-role">💻 程序开发</view>
+            <view class="credit-name">律己的绅士</view>
+          </view>
+          
+          <view class="credit-item">
+            <view class="credit-role">🎨 美术设计</view>
+            <view class="credit-name">律己的绅士</view>
+          </view>
+          
+          <view class="credit-item">
+            <view class="credit-role">🎵 音效制作</view>
+            <view class="credit-name">律己的绅士</view>
+          </view>
+        </view>
+        
+        <view class="credits-footer">
+          <view class="version-info">
+            <text class="version-label">版本</text>
+            <text class="version-number">v1.0.0</text>
+          </view>
+          <view class="version-info">
+            <text class="version-label">发布日期</text>
+            <text class="version-number">2026-05-23</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 弹窗底部 -->
+      <view class="modal-footer">
+        <view class="modal-close-btn" bindtap="closeCreditsModal">
+          <text class="close-text">关闭</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 自定义弹窗 - 用户协议 -->
+  <view class="modal-overlay {{showAgreementModal ? 'show' : ''}}" bindtap="closeAgreementModal" wx:if="{{showAgreementModal}}">
+    <view class="modal-container agreement-modal" catchtap="preventClose">
+      <!-- 弹窗头部 -->
+      <view class="modal-header">
+        <view class="modal-icon">📋</view>
+        <text class="modal-title">用户协议</text>
+        <view class="modal-decoration"></view>
+      </view>
+      
+      <!-- 弹窗内容 -->
+      <view class="modal-body">
+        <scroll-view class="agreement-content" scroll-y>
+          <view class="agreement-section">
+            <text class="agreement-title">1. 数据收集</text>
+            <text class="agreement-text">我们仅收集必要的游戏数据（如游戏进度、设置偏好）用于提供游戏服务。</text>
+          </view>
+          
+          <view class="agreement-section">
+            <text class="agreement-title">2. 数据存储</text>
+            <text class="agreement-text">所有数据均存储在您的本地设备和微信服务器上。</text>
+          </view>
+          
+          <view class="agreement-section">
+            <text class="agreement-title">3. 第三方服务</text>
+            <text class="agreement-text">本游戏使用微信小程序平台提供的服务。</text>
+          </view>
+          
+          <view class="agreement-section">
+            <text class="agreement-title">4. 用户权利</text>
+            <text class="agreement-text">您有权随时清除自己的游戏数据。</text>
+          </view>
+          
+          <view class="agreement-section">
+            <text class="agreement-title">5. 免责声明</text>
+            <text class="agreement-text">本游戏仅供娱乐，不涉及真实赌博。</text>
+          </view>
+          
+          <view class="agreement-section highlight-section">
+            <text class="agreement-text">继续使用即表示您同意以上条款。</text>
+          </view>
+        </scroll-view>
+      </view>
+      
+      <!-- 弹窗底部 -->
+      <view class="modal-footer">
+        <view class="modal-close-btn" bindtap="closeAgreementModal">
+          <text class="close-text">我已了解</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

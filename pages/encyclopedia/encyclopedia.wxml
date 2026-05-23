@@ -1,0 +1,253 @@
+<!-- 命运赌局 - 卡牌百科页面 -->
+<view class="encyclopedia-container bg-pattern">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title text-glow">📚 卡牌百科</text>
+    <text class="page-subtitle">探索命运赌局的奥秘</text>
+    <view class="divider"></view>
+  </view>
+
+  <!-- 标签栏 -->
+  <view class="tab-bar">
+    <view class="tab {{currentTab === 'classes' ? 'active' : ''}}" bindtap="switchTab" data-tab="classes">
+      <text class="tab-icon">🃏</text>
+      <text class="tab-text">职业卡牌</text>
+    </view>
+    <view class="tab {{currentTab === 'enemies' ? 'active' : ''}}" bindtap="switchTab" data-tab="enemies">
+      <text class="tab-icon">👹</text>
+      <text class="tab-text">敌人图鉴</text>
+    </view>
+    <view class="tab {{currentTab === 'bosses' ? 'active' : ''}}" bindtap="switchTab" data-tab="bosses">
+      <text class="tab-icon">👑</text>
+      <text class="tab-text">Boss档案</text>
+    </view>
+    <view class="tab {{currentTab === 'relics' ? 'active' : ''}}" bindtap="switchTab" data-tab="relics">
+      <text class="tab-icon">💎</text>
+      <text class="tab-text">遗物收藏</text>
+    </view>
+  </view>
+
+  <!-- 职业卡牌标签 -->
+  <view class="content-section" wx:if="{{currentTab === 'classes'}}">
+    <!-- 职业选择器 -->
+    <view class="class-selector">
+      <view class="class-tab {{selectedClass === 'GAMBLER' ? 'active' : ''}} gambler-tab" bindtap="selectClass" data-class="GAMBLER">
+        <text class="class-tab-icon">🎲</text>
+        <text class="class-tab-name">赌徒</text>
+      </view>
+      <view class="class-tab {{selectedClass === 'MAGICIAN' ? 'active' : ''}} magician-tab" bindtap="selectClass" data-class="MAGICIAN">
+        <text class="class-tab-icon">🎭</text>
+        <text class="class-tab-name">魔术师</text>
+      </view>
+      <view class="class-tab {{selectedClass === 'EXECUTIONER' ? 'active' : ''}} executioner-tab" bindtap="selectClass" data-class="EXECUTIONER">
+        <text class="class-tab-icon">⚖️</text>
+        <text class="class-tab-name">处刑者</text>
+      </view>
+      <view class="class-tab {{selectedClass === 'MANIAC' ? 'active' : ''}} maniac-tab" bindtap="selectClass" data-class="MANIAC">
+        <text class="class-tab-icon">🔥</text>
+        <text class="class-tab-name">狂徒</text>
+      </view>
+    </view>
+
+    <!-- 职业信息卡片 -->
+    <view class="class-info-card">
+      <view class="class-info-header">
+        <view class="class-avatar {{selectedClass.toLowerCase()}}-avatar">
+          <text class="class-avatar-icon">{{classData.icon}}</text>
+        </view>
+        <view class="class-info-text">
+          <text class="class-info-name">{{classData.name}}</text>
+          <text class="class-info-title">{{classData.specialMechanic}}</text>
+        </view>
+      </view>
+      <text class="class-info-desc">{{classData.description}}</text>
+      <view class="class-info-stats">
+        <view class="info-stat">
+          <text class="info-stat-label">起始生命</text>
+          <text class="info-stat-value">{{classData.startingHp}}</text>
+        </view>
+        <view class="info-stat">
+          <text class="info-stat-label">专属卡牌</text>
+          <text class="info-stat-value">{{classCards.length}}张</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 卡牌列表 -->
+    <view class="section-header">
+      <text class="section-title">专属卡牌</text>
+      <text class="section-count">共 {{classCards.length}} 张</text>
+    </view>
+    
+    <view class="card-grid">
+      <view class="card-item {{item.rarity.toLowerCase()}} {{item.selected ? 'selected' : ''}}" 
+            wx:for="{{classCards}}" 
+            wx:key="id" 
+            bindtap="showCardDetail" 
+            data-card="{{item}}">
+        <view class="card-rarity-glow"></view>
+        <view class="card-content">
+          <view class="card-item-header">
+            <text class="card-item-icon">{{item.typeIcon || '🃏'}}</text>
+            <view class="card-item-cost" wx:if="{{item.cost > 0}}">
+              <text>{{item.cost}}</text>
+            </view>
+          </view>
+          <text class="card-item-name">{{item.name}}</text>
+          <text class="card-item-desc">{{item.description}}</text>
+          <view class="card-item-stats">
+            <view class="item-stat">
+              <text class="item-stat-icon">🎲</text>
+              <text class="item-stat-value">{{item.rollRange.min}}-{{item.rollRange.max}}</text>
+            </view>
+            <view class="item-stat">
+              <text class="item-stat-icon">⚡</text>
+              <text class="item-stat-value">{{item.speed}}</text>
+            </view>
+          </view>
+          <view class="card-item-tags">
+            <text class="item-tag {{item.rarity.toLowerCase()}}-tag">{{item.rarityText}}</text>
+            <text class="item-tag risk-tag {{item.riskLevel.toLowerCase()}}" wx:if="{{item.riskLevel}}">{{item.riskText}}</text>
+            <text class="item-tag archetype-tag" wx:if="{{item.archetype}}">{{item.archetype}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 敌人图鉴标签 -->
+  <view class="content-section" wx:if="{{currentTab === 'enemies'}}">
+    <view class="section-header">
+      <text class="section-title">普通敌人</text>
+      <text class="section-count">共 {{normalEnemies.length}} 个</text>
+    </view>
+    
+    <view class="enemy-grid">
+      <view class="enemy-card {{item.faction}}" wx:for="{{normalEnemies}}" wx:key="id" bindtap="showEnemyDetail" data-enemy="{{item}}">
+        <view class="enemy-card-header">
+          <text class="enemy-card-icon">{{item.icon}}</text>
+          <view class="enemy-card-info">
+            <text class="enemy-card-name">{{item.name}}</text>
+            <text class="enemy-card-faction">{{item.factionText}}</text>
+          </view>
+        </view>
+        <text class="enemy-card-desc">{{item.description}}</text>
+        <view class="enemy-card-stats">
+          <view class="enemy-stat">
+            <text class="enemy-stat-label">生命</text>
+            <text class="enemy-stat-value">{{item.hp}}</text>
+          </view>
+          <view class="enemy-stat">
+            <text class="enemy-stat-label">难度</text>
+            <text class="enemy-stat-value">{{item.difficultyText}}</text>
+          </view>
+          <view class="enemy-stat">
+            <text class="enemy-stat-label">AI类型</text>
+            <text class="enemy-stat-value">{{item.aiTypeText}}</text>
+          </view>
+        </view>
+        <view class="enemy-card-abilities" wx:if="{{item.abilities && item.abilities.length > 0}}">
+          <text class="ability-tag" wx:for="{{item.abilities}}" wx:key="index">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Boss档案标签 -->
+  <view class="content-section" wx:if="{{currentTab === 'bosses'}}">
+    <view class="section-header">
+      <text class="section-title">Boss档案</text>
+      <text class="section-count">共 {{bossList.length}} 个</text>
+    </view>
+    
+    <view class="boss-list">
+      <view class="boss-card {{item.phase}}" wx:for="{{bossList}}" wx:key="id" bindtap="showBossDetail" data-boss="{{item}}">
+        <view class="boss-card-bg-effect"></view>
+        <view class="boss-card-content">
+          <view class="boss-card-header">
+            <view class="boss-avatar-large">
+              <text class="boss-avatar-icon">{{item.icon}}</text>
+            </view>
+            <view class="boss-card-info">
+              <text class="boss-card-name">{{item.name}}</text>
+              <text class="boss-card-title">{{item.title}}</text>
+              <view class="boss-faction">
+                <text class="faction-tag">{{item.factionText}}</text>
+              </view>
+            </view>
+          </view>
+          
+          <text class="boss-card-desc">{{item.description}}</text>
+          
+          <view class="boss-card-mechanic" wx:if="{{item.coreMechanic}}">
+            <text class="mechanic-label">核心机制</text>
+            <text class="mechanic-name">{{item.coreMechanic.name}}</text>
+            <text class="mechanic-desc">{{item.coreMechanic.description}}</text>
+          </view>
+          
+          <!-- 阶段信息 -->
+          <view class="boss-phases" wx:if="{{item.phases && item.phases.length > 0}}">
+            <text class="phases-label">三阶段系统</text>
+            <view class="phase-list">
+              <view class="phase-item {{index < item.currentPhase ? 'active' : ''}}" wx:for="{{item.phases}}" wx:key="index">
+                <view class="phase-number">{{index + 1}}</view>
+                <view class="phase-info">
+                  <text class="phase-name">{{item.name}}</text>
+                  <text class="phase-hp">HP ≤ {{item.hpThreshold}}</text>
+                  <text class="phase-desc">{{item.description}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+          
+          <view class="boss-card-stats">
+            <view class="boss-stat">
+              <text class="boss-stat-label">生命</text>
+              <text class="boss-stat-value">{{item.hp}}/{{item.maxHp}}</text>
+            </view>
+            <view class="boss-stat">
+              <text class="boss-stat-label">难度</text>
+              <text class="boss-stat-value {{item.difficulty.toLowerCase()}}-text">{{item.difficultyText}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 遗物收藏标签 -->
+  <view class="content-section" wx:if="{{currentTab === 'relics'}}">
+    <view class="section-header">
+      <text class="section-title">遗物收藏</text>
+      <text class="section-count">共 {{relicList.length}} 个</text>
+    </view>
+    
+    <view class="relic-grid">
+      <view class="relic-card {{item.rarity.toLowerCase()}}" wx:for="{{relicList}}" wx:key="id">
+        <view class="relic-card-glow"></view>
+        <view class="relic-card-content">
+          <view class="relic-card-header">
+            <text class="relic-card-icon">{{item.icon}}</text>
+            <view class="relic-card-info">
+              <text class="relic-card-name">{{item.name}}</text>
+              <text class="relic-card-rarity {{item.rarity.toLowerCase()}}-text">{{item.rarityText}}</text>
+            </view>
+          </view>
+          <text class="relic-card-desc">{{item.description}}</text>
+          <text class="relic-card-flavor">"{{item.flavor}}"</text>
+          <view class="relic-unlock" wx:if="{{item.unlockCondition}}">
+            <text class="unlock-label">🔒 解锁条件</text>
+            <text class="unlock-text">{{item.unlockCondition}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 返回按钮 -->
+  <view class="back-section">
+    <view class="back-btn btn-primary btn-glow" bindtap="goBack">
+      返回主菜单
+    </view>
+  </view>
+</view>

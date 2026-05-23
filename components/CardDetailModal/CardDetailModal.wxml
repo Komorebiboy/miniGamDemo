@@ -1,0 +1,90 @@
+<!--components/CardDetailModal/CardDetailModal.wxml-->
+<view class="card-detail-mask" wx:if="{{visible}}" bindtap="onMaskTap">
+  <view class="card-detail-container" catchtap="onContainerTap">
+    <!-- 关闭按钮 -->
+    <view class="close-btn" bindtap="onClose">×</view>
+    
+    <!-- 卡牌展示区域 -->
+    <view class="card-showcase {{formattedCard.rarity}} {{formattedCard.isFinisher ? 'finisher' : ''}}" wx:if="{{formattedCard}}">
+      <!-- 稀有度光效 -->
+      <view class="rarity-glow"></view>
+      
+      <!-- 卡牌头部 -->
+      <view class="card-header">
+        <view class="card-type-badge {{formattedCard.type}}">{{formattedCard.typeText}}</view>
+        <view class="card-risk {{formattedCard.riskLevel}}">{{formattedCard.riskText}}</view>
+      </view>
+      
+      <!-- 卡牌名称 -->
+      <view class="card-name-section">
+        <text class="card-name">{{formattedCard.name}}</text>
+        <view class="finisher-badge" wx:if="{{formattedCard.isFinisher}}">终结牌</view>
+      </view>
+      
+      <!-- 卡牌立绘区域 -->
+      <view class="card-artwork">
+        <view class="artwork-placeholder">
+          <text class="artwork-icon">{{formattedCard.typeIcon}}</text>
+        </view>
+        <!-- 特效装饰 -->
+        <view class="artwork-effects">
+          <view class="effect-line" wx:for="{{3}}" wx:key="index"></view>
+        </view>
+      </view>
+      
+      <!-- 核心数据 -->
+      <view class="card-core-stats">
+        <!-- Roll范围 -->
+        <view class="stat-box roll-range">
+          <view class="stat-label">Roll范围</view>
+          <view class="stat-value">
+            <text class="range-number">{{formattedCard.rollRange.min}}</text>
+            <text class="range-separator">~</text>
+            <text class="range-number">{{formattedCard.rollRange.max}}</text>
+          </view>
+        </view>
+        
+        <!-- 速度 -->
+        <view class="stat-box speed">
+          <view class="stat-label">速度</view>
+          <view class="stat-value">
+            <text class="speed-number">{{formattedCard.speed}}</text>
+          </view>
+          <view class="speed-bar">
+            <view class="speed-fill" style="width: {{formattedCard.speed * 10}}%"></view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 效果描述 -->
+      <view class="card-effects">
+        <view class="effects-title">效果</view>
+        <view class="effect-list" wx:if="{{formattedCard.displayEffects && formattedCard.displayEffects.length > 0}}">
+          <view class="effect-item" wx:for="{{formattedCard.displayEffects}}" wx:key="index">
+            <text class="effect-icon">⚡</text>
+            <text class="effect-text">{{item}}</text>
+          </view>
+        </view>
+        <view class="no-effects" wx:if="{{!formattedCard.displayEffects || formattedCard.displayEffects.length === 0}}">
+          <text>无特殊效果</text>
+        </view>
+        <view class="description" wx:if="{{formattedCard.description}}">{{formattedCard.description}}</view>
+      </view>
+      
+      <!-- 标签 -->
+      <view class="card-tags" wx:if="{{formattedCard.tags && formattedCard.tags.length > 0}}">
+        <view class="tag {{item}}" wx:for="{{formattedCard.tags}}" wx:key="index">{{item}}</view>
+      </view>
+      
+      <!-- 已揭示提示 -->
+      <view class="revealed-badge">
+        <text>👁 卡牌详情</text>
+      </view>
+    </view>
+    
+    <!-- 底部提示 -->
+    <view class="modal-hint">
+      <text>点击外部关闭</text>
+    </view>
+  </view>
+</view>

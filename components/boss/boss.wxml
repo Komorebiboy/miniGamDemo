@@ -1,0 +1,82 @@
+<!-- 命运赌局 - Boss组件 -->
+<view class="boss-component {{phase}}">
+  <!-- Boss背景特效 -->
+  <view class="boss-bg-effects">
+    <view class="bg-glow"></view>
+    <view class="bg-particles">
+      <view class="particle p1"></view>
+      <view class="particle p2"></view>
+      <view class="particle p3"></view>
+      <view class="particle p4"></view>
+      <view class="particle p5"></view>
+    </view>
+  </view>
+
+  <!-- Boss主体 -->
+  <view class="boss-body">
+    <!-- Boss头像区域 -->
+    <view class="boss-avatar-container">
+      <view class="boss-avatar {{isEnraged ? 'enraged' : ''}}">
+        <text class="avatar-icon">{{icon}}</text>
+      </view>
+      <!-- 阶段指示器 -->
+      <view class="phase-indicator">
+        <view class="phase-dot {{phase >= 1 ? 'active' : ''}}"></view>
+        <view class="phase-dot {{phase >= 2 ? 'active' : ''}}"></view>
+        <view class="phase-dot {{phase >= 3 ? 'active' : ''}}"></view>
+      </view>
+    </view>
+
+    <!-- Boss信息 -->
+    <view class="boss-info">
+      <view class="boss-name-section">
+        <text class="boss-name">{{name}}</text>
+        <text class="boss-title">{{title}}</text>
+      </view>
+      
+      <!-- 血条 -->
+      <view class="boss-health-bar">
+        <view class="health-bg">
+          <view class="health-fill" style="width: {{hpPercent}}%"></view>
+        </view>
+        <text class="health-text">{{hp}} / {{maxHp}}</text>
+      </view>
+
+      <!-- 护盾 -->
+      <view class="boss-shield" wx:if="{{shield > 0}}">
+        <text class="shield-icon">🛡️</text>
+        <text class="shield-value">{{shield}}</text>
+      </view>
+
+      <!-- 效果标签 -->
+      <view class="boss-effects">
+        <view class="effect-tag" wx:for="{{effects}}" wx:key="index">
+          {{item}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Boss技能提示 -->
+  <view class="boss-skill-hint" wx:if="{{showSkillHint}}">
+    <view class="skill-hint-content">
+      <text class="skill-name">{{skillName}}</text>
+      <text class="skill-desc">{{skillDesc}}</text>
+    </view>
+  </view>
+
+  <!-- 阶段转换特效 -->
+  <view class="phase-transition" wx:if="{{showPhaseTransition}}">
+    <view class="transition-content">
+      <text class="transition-text">阶段 {{phase}} 开始</text>
+      <text class="transition-desc">{{phaseDesc}}</text>
+    </view>
+  </view>
+
+  <!-- Boss台词 -->
+  <view class="boss-dialogue" wx:if="{{showDialogue}}">
+    <view class="dialogue-bubble">
+      <text class="dialogue-text">{{dialogueText}}</text>
+    </view>
+  </view>
+</view>

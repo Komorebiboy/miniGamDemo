@@ -19,8 +19,53 @@ export { CardSystem, getCardSystem, DrawResult, UseCardResult } from './systems/
 // 管理器
 export { BattleManager, getBattleManager, BattleConfig, TurnResult, BattleResult } from './managers/BattleManager';
 
+// 增强版管理器
+export {
+    EnhancedBattleManager,
+    getEnhancedBattleManager,
+    EnhancedBattleConfig,
+    EnhancedTurnResult,
+    AIType,
+    BurstState,
+    DefenseStance
+} from './EnhancedBattleManager';
+
 // 数据
 export * from './data/CardDatabase';
+
+// 增强版卡牌数据
+export {
+    // 枚举
+    RollQuality,
+    CardTag,
+    // 类型
+    RollQualityEffect,
+    EnhancedCardData,
+    // 函数
+    getRollQuality,
+    getRollQualityName,
+    getRollQualityColor,
+    // 卡牌
+    GAMBLER_BLADE,
+    FATE_DICE,
+    PRECISE_STAB,
+    DOUBLE_SLASH,
+    DEFLECT,
+    GAMBLER_LAUGH,
+    IMBALANCE_STRIKE,
+    ANTICIPATION_BLOCK,
+    WIND_SLASH,
+    FLASH_STEP,
+    HEAVY_BLOW,
+    CHARGED_STRIKE,
+    ENHANCED_FIREBALL,
+    ENHANCED_SLASH,
+    // 牌组
+    ENHANCED_STARTING_DECK,
+    GAMBLER_DECK,
+    STABLE_DECK,
+    ALL_ENHANCED_CARDS
+} from './data/EnhancedCardDatabase';
 
 // 工具
 export * from './utils/Utils';

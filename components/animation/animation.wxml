@@ -1,0 +1,89 @@
+<!-- 命运赌局 - 动画效果组件 -->
+<view class="animation-container">
+  <!-- 屏幕震动效果 -->
+  <view class="screen-shake-effect {{shakeActive ? 'active' : ''}}"></view>
+  
+  <!-- 闪白效果 -->
+  <view class="flash-white-effect {{flashActive ? 'active' : ''}}"></view>
+  
+  <!-- 冲击波效果 -->
+  <view class="shockwave-effect {{shockwaveActive ? 'active' : ''}}">
+    <view class="shockwave-ring"></view>
+  </view>
+  
+  <!-- 粒子效果 -->
+  <view class="particles-effect {{particlesActive ? 'active' : ''}}">
+    <view class="particle p1"></view>
+    <view class="particle p2"></view>
+    <view class="particle p3"></view>
+    <view class="particle p4"></view>
+    <view class="particle p5"></view>
+    <view class="particle p6"></view>
+    <view class="particle p7"></view>
+    <view class="particle p8"></view>
+  </view>
+  
+  <!-- 闪电效果 -->
+  <view class="lightning-effect {{lightningActive ? 'active' : ''}}">
+    <view class="lightning-bolt"></view>
+  </view>
+  
+  <!-- 伤害数字浮动效果 -->
+  <view class="damage-float-effect {{damageFloatActive ? 'active' : ''}}">
+    <text class="damage-number {{damageType}}">{{damageValue}}</text>
+  </view>
+  
+  <!-- 暴击特效 -->
+  <view class="crit-effect {{critActive ? 'active' : ''}}">
+    <text class="crit-text">暴击!</text>
+  </view>
+  
+  <!-- 闪避特效 -->
+  <view class="dodge-effect {{dodgeActive ? 'active' : ''}}">
+    <text class="dodge-text">闪避!</text>
+  </view>
+  
+  <!-- 胜利特效 -->
+  <view class="victory-effect {{victoryActive ? 'active' : ''}}">
+    <view class="victory-crown">👑</view>
+    <text class="victory-text">胜利!</text>
+  </view>
+  
+  <!-- 失败特效 -->
+  <view class="defeat-effect {{defeatActive ? 'active' : ''}}">
+    <text class="defeat-text">失败...</text>
+  </view>
+  
+  <!-- 卡牌翻转效果 -->
+  <view class="card-flip-effect {{cardFlipActive ? 'active' : ''}}">
+    <view class="flip-card">
+      <view class="flip-front"></view>
+      <view class="flip-back"></view>
+    </view>
+  </view>
+  
+  <!-- 技能释放特效 -->
+  <view class="skill-cast-effect {{skillCastActive ? 'active' : ''}}">
+    <view class="skill-glow"></view>
+    <view class="skill-particles">
+      <view class="skill-particle sp1"></view>
+      <view class="skill-particle sp2"></view>
+      <view class="skill-particle sp3"></view>
+    </view>
+  </view>
+  
+  <!-- 治疗特效 -->
+  <view class="heal-effect {{healActive ? 'active' : ''}}">
+    <view class="heal-glow"></view>
+    <text class="heal-text">+{{healValue}}</text>
+  </view>
+  
+  <!-- 眩晕特效 -->
+  <view class="stun-effect {{stunActive ? 'active' : ''}}">
+    <view class="stun-stars">
+      <text class="star">⭐</text>
+      <text class="star">⭐</text>
+      <text class="star">⭐</text>
+    </view>
+  </view>
+</view>

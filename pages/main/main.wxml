@@ -1,0 +1,93 @@
+<!-- 命运赌局 - 主菜单页面 -->
+<view class="main-container bg-pattern bg-noise">
+  <!-- 浮动扑克牌装饰 -->
+  <view class="floating-cards">
+    <view class="floating-card card-1 animate-float" style="animation-delay: 0s">♠</view>
+    <view class="floating-card card-2 animate-float" style="animation-delay: 1s">♥</view>
+    <view class="floating-card card-3 animate-float" style="animation-delay: 2s">♣</view>
+    <view class="floating-card card-4 animate-float" style="animation-delay: 0.5s">♦</view>
+  </view>
+
+  <!-- 游戏标题 -->
+  <view class="title-section animate-fade-in">
+    <text class="game-title text-glow animate-neon-flicker">命运赌局</text>
+    <text class="game-subtitle">FATE GAMBLE</text>
+    <view class="divider"></view>
+  </view>
+
+  <!-- 职业选择 -->
+  <view class="class-section animate-slide-up" style="animation-delay: 0.3s">
+    <text class="section-title">选择你的命运</text>
+    <view class="class-grid">
+      <!-- 赌徒 -->
+      <view 
+        class="class-card {{selectedClass === 'gambler' ? 'selected' : ''}}" 
+        bindtap="selectClass" 
+        data-class="gambler"
+      >
+        <view class="class-icon gambler-icon">🎲</view>
+        <text class="class-name">赌徒</text>
+        <text class="class-desc">高风险，高回报</text>
+        <view class="class-border-gold"></view>
+      </view>
+
+      <!-- 魔术师 -->
+      <view 
+        class="class-card {{selectedClass === 'magician' ? 'selected' : ''}}" 
+        bindtap="selectClass" 
+        data-class="magician"
+      >
+        <view class="class-icon magician-icon">🎭</view>
+        <text class="class-name">魔术师</text>
+        <text class="class-desc">欺骗与策略</text>
+        <view class="class-border-purple"></view>
+      </view>
+
+      <!-- 处刑者 -->
+      <view 
+        class="class-card {{selectedClass === 'executioner' ? 'selected' : ''}}" 
+        bindtap="selectClass" 
+        data-class="executioner"
+      >
+        <view class="class-icon executioner-icon">⚖️</view>
+        <text class="class-name">处刑者</text>
+        <text class="class-desc">公平与制裁</text>
+        <view class="class-border-steel"></view>
+      </view>
+
+      <!-- 狂徒 -->
+      <view 
+        class="class-card {{selectedClass === 'madman' ? 'selected' : ''}}" 
+        bindtap="selectClass" 
+        data-class="madman"
+      >
+        <view class="class-icon madman-icon">🔥</view>
+        <text class="class-name">狂徒</text>
+        <text class="class-desc">疯狂与力量</text>
+        <view class="class-border-red"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 开始游戏按钮 -->
+  <view class="action-section animate-slide-up" style="animation-delay: 0.6s">
+    <button 
+      class="start-btn btn-primary btn-glow {{selectedClass ? '' : 'disabled'}}" 
+      bindtap="startGame"
+      disabled="{{!selectedClass}}"
+    >
+      {{selectedClass ? '开始游戏' : '请选择职业'}}
+    </button>
+    
+    <view class="secondary-buttons">
+      <button class="secondary-btn" bindtap="goToEncyclopedia">卡牌百科</button>
+      <button class="secondary-btn" bindtap="goToSettings">游戏设置</button>
+    </view>
+  </view>
+
+  <!-- 底部装饰 -->
+  <view class="bottom-decoration">
+    <view class="gold-line"></view>
+    <text class="bottom-text">命运的赌局，即将开始</text>
+  </view>
+</view>

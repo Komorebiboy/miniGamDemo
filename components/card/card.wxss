@@ -1,0 +1,380 @@
+/* 命运赌局 - 卡牌组件样式 */
+
+.card-component {
+  position: relative;
+  border-radius: 16rpx;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+/* ==================== 卡牌正面 ==================== */
+.card-front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(145deg, #2a2a3a 0%, #1a1a24 50%, #12121a 100%);
+  border-radius: 16rpx;
+  border: 2rpx solid var(--color-dark-gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx;
+  backface-visibility: hidden;
+  z-index: 2;
+}
+
+/* ==================== 卡牌背面 ==================== */
+.card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    #1a1a24,
+    #1a1a24 10rpx,
+    #2a2a3a 10rpx,
+    #2a2a3a 20rpx
+  );
+  border-radius: 16rpx;
+  border: 2rpx solid var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+.back-pattern {
+  position: absolute;
+  top: 8rpx;
+  left: 8rpx;
+  right: 8rpx;
+  bottom: 8rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+  border-radius: 10rpx;
+}
+
+.back-symbol {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+  text-shadow: 0 0 20rpx rgba(212, 175, 55, 0.5);
+}
+
+/* ==================== 翻转效果 ==================== */
+.flipped .card-front {
+  transform: rotateY(180deg);
+}
+
+.flipped .card-back {
+  transform: rotateY(0deg);
+}
+
+/* ==================== 费用徽章 ==================== */
+.cost-badge {
+  position: absolute;
+  top: 5rpx;
+  right: 5rpx;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  background: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 0 10rpx rgba(212, 175, 55, 0.5);
+}
+
+.cost-text {
+  font-size: 18rpx;
+  font-weight: bold;
+  color: black;
+}
+
+/* ==================== 稀有度指示器 ==================== */
+.rarity-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rpx;
+  overflow: hidden;
+}
+
+.rarity-glow {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.6;
+}
+
+/* ==================== 卡牌图标 ==================== */
+.card-icon-area {
+  margin-bottom: 8rpx;
+}
+
+.card-icon {
+  font-size: 40rpx;
+  filter: drop-shadow(0 0 5rpx rgba(212, 175, 55, 0.3));
+}
+
+/* ==================== 卡牌名称 ==================== */
+.card-name {
+  font-size: 20rpx;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin-bottom: 5rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ==================== 卡牌类型 ==================== */
+.card-type {
+  font-size: 16rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 5rpx;
+}
+
+/* ==================== 属性区域 ==================== */
+.card-stats {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin: 5rpx 0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.stat-icon {
+  font-size: 18rpx;
+}
+
+.stat-value {
+  font-size: 18rpx;
+  color: var(--color-light-gray);
+  font-weight: bold;
+}
+
+/* ==================== 效果预览 ==================== */
+.card-effects {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 5rpx;
+}
+
+.effect-text {
+  font-size: 14rpx;
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 2rpx 6rpx;
+  border-radius: 6rpx;
+  margin: 2rpx 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ==================== 标签 ==================== */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4rpx;
+  margin-top: 5rpx;
+  width: 100%;
+}
+
+.tag {
+  font-size: 12rpx;
+  color: #888;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rpx 6rpx;
+  border-radius: 6rpx;
+}
+
+/* ==================== 风险等级 ==================== */
+.risk-badge {
+  position: absolute;
+  bottom: 5rpx;
+  left: 5rpx;
+  font-size: 12rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+  font-weight: bold;
+}
+
+.risk-badge.SAFE {
+  background: rgba(0, 255, 128, 0.2);
+  color: #00ff80;
+}
+
+.risk-badge.MODERATE {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.risk-badge.HIGH {
+  background: rgba(255, 0, 64, 0.2);
+  color: #ff0040;
+}
+
+.risk-badge.EXTREME {
+  background: linear-gradient(90deg, #ff0040 0%, #bf00ff 100%);
+  color: white;
+}
+
+/* ==================== 选中效果 ==================== */
+.selection-glow {
+  position: absolute;
+  top: -4rpx;
+  left: -4rpx;
+  right: -4rpx;
+  bottom: -4rpx;
+  border-radius: 20rpx;
+  border: 2rpx solid var(--color-gold);
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.5), inset 0 0 20rpx rgba(212, 175, 55, 0.1);
+  animation: selectionPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes selectionPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ==================== 稀有度样式 ==================== */
+.rarity-common .card-front {
+  border-color: #808080;
+}
+
+.rarity-common .rarity-glow {
+  background: linear-gradient(90deg, transparent, #808080, transparent);
+}
+
+.rarity-uncommon .card-front {
+  border-color: #00d4ff;
+  box-shadow: 0 0 10rpx rgba(0, 212, 255, 0.3);
+}
+
+.rarity-uncommon .rarity-glow {
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+}
+
+.rarity-rare .card-front {
+  border-color: #bf00ff;
+  box-shadow: 0 0 10rpx rgba(191, 0, 255, 0.3);
+}
+
+.rarity-rare .rarity-glow {
+  background: linear-gradient(90deg, transparent, #bf00ff, transparent);
+}
+
+.rarity-legendary .card-front {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 15rpx rgba(212, 175, 55, 0.5);
+}
+
+.rarity-legendary .rarity-glow {
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* ==================== 选中状态 ==================== */
+.selected {
+  transform: translateY(-10rpx) scale(1.05);
+  z-index: 10;
+}
+
+.selected .card-front {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 25rpx rgba(212, 175, 55, 0.5);
+}
+
+/* ==================== 耗尽状态 ==================== */
+.exhausted {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
+
+.exhausted .card-front {
+  border-color: #374151;
+}
+
+/* ==================== 传奇卡牌特效 ==================== */
+.legendary-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 16rpx;
+}
+
+.sparkle {
+  position: absolute;
+  width: 4rpx;
+  height: 4rpx;
+  background: var(--color-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10rpx var(--color-gold), 0 0 20rpx var(--color-gold);
+  animation: sparkleFloat 2s ease-in-out infinite;
+}
+
+.sparkle-1 {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.sparkle-2 {
+  top: 60%;
+  right: 20%;
+  animation-delay: 0.7s;
+}
+
+.sparkle-3 {
+  bottom: 20%;
+  left: 50%;
+  animation-delay: 1.4s;
+}
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==================== 悬停效果 ==================== */
+.card-component:active {
+  transform: translateY(-5rpx) scale(1.02);
+}
+
+.card-component:active .card-front {
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.3);
+}

@@ -1,12 +1,15 @@
 {
   "pages": [
+    "pages/main/main",
+    "pages/battle/battle",
+    "pages/encyclopedia/encyclopedia",
     "pages/index/index",
-    "pages/battle/battle"
+    "pages/settings/settings"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#1a1a2e",
-    "navigationBarTitleText": "Roguelike卡牌RPG",
+    "navigationBarBackgroundColor": "#0D0D0D",
+    "navigationBarTitleText": "命运赌局",
     "navigationBarTextStyle": "white"
   },
   "style": "v2",

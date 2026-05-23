@@ -1,8 +1,24 @@
+/* 命运赌局 - 全局样式 */
+
 page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  background-color: #f5f5f5;
+  background-color: #0D0D0D;
+  color: #ffffff;
 }
 
+/* ==================== 全局颜色变量 ==================== */
+:root {
+  --color-black: #0D0D0D;
+  --color-deep-red: #B3001B;
+  --color-gold: #D4AF37;
+  --color-neon-purple: #8A2BE2;
+  --color-crazy-red: #FF2E63;
+  --color-gray: #6b7280;
+  --color-light-gray: #9ca3af;
+  --color-dark-gray: #374151;
+}
+
+/* ==================== 基础容器 ==================== */
 .container {
   display: flex;
   flex-direction: column;
@@ -11,4 +27,295 @@ page {
   min-height: 100vh;
   padding: 20rpx;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ==================== 动画定义 ==================== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 10rpx var(--color-gold), 0 0 20rpx var(--color-gold); }
+  50% { box-shadow: 0 0 20rpx var(--color-gold), 0 0 40rpx var(--color-gold); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10rpx); }
+  75% { transform: translateX(10rpx); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20rpx) rotate(5deg); }
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.4; }
+  94% { opacity: 1; }
+  95% { opacity: 0.7; }
+  96% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ==================== 工具类 ==================== */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.3s ease-out;
+}
+
+.animate-neon-flicker {
+  animation: neonFlicker 4s infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* ==================== 按钮样式 ==================== */
+.btn-primary {
+  background: linear-gradient(135deg, #B3001B 0%, #D4AF37 100%);
+  border: 2rpx solid var(--color-gold);
+  color: white;
+  font-weight: bold;
+  padding: 24rpx 48rpx;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.3);
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 30rpx rgba(212, 175, 55, 0.5);
+}
+
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* ==================== 进度条样式 ==================== */
+.progress-bar {
+  width: 100%;
+  height: 16rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8rpx;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 8rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-hp {
+  background: linear-gradient(90deg, #B3001B 0%, #FF2E63 100%);
+}
+
+.progress-shield {
+  background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+}
+
+/* ==================== 文字样式 ==================== */
+.text-gold {
+  color: var(--color-gold);
+}
+
+.text-red {
+  color: var(--color-deep-red);
+}
+
+.text-purple {
+  color: var(--color-neon-purple);
+}
+
+.text-glow {
+  text-shadow: 0 0 10rpx var(--color-gold), 0 0 20rpx var(--color-gold);
+}
+
+.text-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  letter-spacing: 4rpx;
+}
+
+.text-subtitle {
+  font-size: 28rpx;
+  color: var(--color-light-gray);
+}
+
+/* ==================== 卡片样式 ==================== */
+.card {
+  background: linear-gradient(135deg, #1a1a2e 0%, #0D0D0D 100%);
+  border: 2rpx solid var(--color-dark-gray);
+  border-radius: 16rpx;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-glow {
+  box-shadow: 0 0 30rpx rgba(212, 175, 55, 0.2);
+}
+
+.card-legendary {
+  border-color: var(--color-gold);
+  animation: glow 2s ease-in-out infinite;
+}
+
+.card-curse {
+  border-color: var(--color-deep-red);
+  background: linear-gradient(135deg, #2d0a0a 0%, #0D0D0D 100%);
+}
+
+/* ==================== 阴影效果 ==================== */
+.shadow-lg {
+  box-shadow: 0 20rpx 25rpx -5rpx rgba(0, 0, 0, 0.3), 0 10rpx 10rpx -5rpx rgba(0, 0, 0, 0.2);
+}
+
+.shadow-gold {
+  box-shadow: 0 0 30rpx rgba(212, 175, 55, 0.3);
+}
+
+/* ==================== 分隔线 ==================== */
+.divider {
+  width: 100%;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 20rpx 0;
+}
+
+/* ==================== 响应式布局 ==================== */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-4 {
+  gap: 16rpx;
+}
+
+.gap-6 {
+  gap: 24rpx;
+}
+
+.gap-8 {
+  gap: 32rpx;
+}
+
+.p-4 {
+  padding: 16rpx;
+}
+
+.p-6 {
+  padding: 24rpx;
+}
+
+.p-8 {
+  padding: 32rpx;
+}
+
+.m-4 {
+  margin: 16rpx;
+}
+
+.mt-4 {
+  margin-top: 16rpx;
+}
+
+.mb-4 {
+  margin-bottom: 16rpx;
+}
+
+/* ==================== 背景效果 ==================== */
+.bg-pattern {
+  background-image: radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
+}
+
+.bg-noise::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
 }

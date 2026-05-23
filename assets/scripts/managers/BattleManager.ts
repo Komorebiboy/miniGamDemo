@@ -294,11 +294,6 @@ export class BattleManager {
             return false;
         }
 
-        if (!this._player.canUseCard(card.data.energyCost)) {
-            console.warn('[BattleManager] 能量不足');
-            return false;
-        }
-
         this._playerSelectedCard = card;
         this._player.selectCard(cardInstanceId);
 
@@ -332,14 +327,10 @@ export class BattleManager {
 
         const hand = getCardSystem().getHand(this._enemy.id);
 
-        // 简单AI：随机选择一张能用的牌
-        const playableCards = hand.filter(card =>
-            this._enemy!.canUseCard(card.data.energyCost)
-        );
-
-        if (playableCards.length > 0) {
-            const randomIndex = Math.floor(Math.random() * playableCards.length);
-            const selectedCard = playableCards[randomIndex];
+        // 简单AI：随机选择一张牌
+        if (hand.length > 0) {
+            const randomIndex = Math.floor(Math.random() * hand.length);
+            const selectedCard = hand[randomIndex];
 
             this._enemySelectedCard = selectedCard;
             this._enemy.selectCard(selectedCard.instanceId);
@@ -362,9 +353,18 @@ export class BattleManager {
         const playerReady = this._player.hasPlayedCard || this._playerSelectedCard !== null;
         const enemyReady = this._enemy.hasPlayedCard || this._enemySelectedCard !== null;
 
+        // 当双方都出牌后，先触发卡牌揭示事件显示怪物出牌
         if (playerReady && enemyReady) {
-            // 双方都已准备，执行结算
-            this._resolveTurn();
+            // 触发卡牌揭示事件，显示怪物出的牌
+            this._emitEvent(BattleEventType.CARD_REVEALED, {
+                playerCard: this._playerSelectedCard,
+                enemyCard: this._enemySelectedCard
+            });
+
+            // 延迟后执行结算
+            setTimeout(() => {
+                this._resolveTurn();
+            }, 1500);
         }
     }
 
@@ -438,24 +438,19 @@ export class BattleManager {
                 console.log('[BattleManager] 平局，双方卡牌失效');
             }
 
-            // 消耗能量
-            this._player.consumeEnergy(this._playerSelectedCard.data.energyCost);
-            this._enemy.consumeEnergy(this._enemySelectedCard.data.energyCost);
-        }
-
         // 标记已出牌
         if (this._playerSelectedCard) {
             getCardSystem().useCard(
                 this._player.id,
                 this._playerSelectedCard.instanceId,
-                this._playerSelectedCard.data.energyCost
+                0
             );
         }
         if (this._enemySelectedCard) {
             getCardSystem().useCard(
                 this._enemy.id,
                 this._enemySelectedCard.instanceId,
-                this._enemySelectedCard.data.energyCost
+                0
             );
         }
 
@@ -608,9 +603,6 @@ export class BattleManager {
                 break;
             case EffectType.HEAL:
                 entity.heal(value);
-                break;
-            case EffectType.ENERGY:
-                entity.restoreEnergy(value);
                 break;
         }
     }

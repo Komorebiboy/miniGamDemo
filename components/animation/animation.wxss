@@ -1,0 +1,607 @@
+/* 命运赌局 - 动画效果组件样式 */
+
+.animation-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* ==================== 屏幕震动效果 ==================== */
+.screen-shake-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+.screen-shake-effect.active {
+  animation: screenShake 0.5s ease-in-out;
+}
+
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-10rpx, -10rpx); }
+  20% { transform: translate(10rpx, 10rpx); }
+  30% { transform: translate(-10rpx, 10rpx); }
+  40% { transform: translate(10rpx, -10rpx); }
+  50% { transform: translate(-5rpx, 5rpx); }
+  60% { transform: translate(5rpx, -5rpx); }
+  70% { transform: translate(-5rpx, -5rpx); }
+  80% { transform: translate(5rpx, 5rpx); }
+  90% { transform: translate(-2rpx, 2rpx); }
+}
+
+/* ==================== 闪白效果 ==================== */
+.flash-white-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flash-white-effect.active {
+  animation: flashWhite 0.3s ease-out;
+}
+
+@keyframes flashWhite {
+  0% { opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* ==================== 冲击波效果 ==================== */
+.shockwave-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.shockwave-effect.active {
+  animation: shockwaveExpand 1s ease-out forwards;
+}
+
+.shockwave-ring {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  border: 4rpx solid var(--color-gold);
+  animation: shockwaveRing 1s ease-out forwards;
+}
+
+@keyframes shockwaveExpand {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes shockwaveRing {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.8);
+  }
+  100% {
+    width: 100vh;
+    height: 100vh;
+    opacity: 0;
+    box-shadow: 0 0 0 50rpx rgba(212, 175, 55, 0);
+  }
+}
+
+/* ==================== 粒子效果 ==================== */
+.particles-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+.particles-effect.active {
+  opacity: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 6rpx;
+  height: 6rpx;
+  background: var(--color-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10rpx var(--color-gold);
+  opacity: 0;
+}
+
+.particles-effect.active .particle {
+  animation: particleFloat 3s ease-in-out infinite;
+}
+
+.p1 { top: 20%; left: 20%; animation-delay: 0s; }
+.p2 { top: 40%; right: 30%; animation-delay: 0.5s; }
+.p3 { bottom: 30%; left: 40%; animation-delay: 1s; }
+.p4 { top: 60%; left: 60%; animation-delay: 1.5s; }
+.p5 { bottom: 20%; right: 20%; animation-delay: 2s; }
+.p6 { top: 30%; left: 70%; animation-delay: 0.3s; }
+.p7 { bottom: 40%; left: 30%; animation-delay: 0.8s; }
+.p8 { top: 70%; right: 40%; animation-delay: 1.2s; }
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50rpx);
+    opacity: 0;
+  }
+}
+
+/* ==================== 闪电效果 ==================== */
+.lightning-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+.lightning-effect.active {
+  animation: lightningFlash 0.2s ease-out;
+}
+
+.lightning-bolt {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4rpx;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+  box-shadow: 0 0 20rpx rgba(255, 255, 255, 0.8);
+}
+
+@keyframes lightningFlash {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ==================== 伤害数字浮动效果 ==================== */
+.damage-float-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.damage-float-effect.active {
+  animation: damageFloat 1s ease-out forwards;
+}
+
+.damage-number {
+  font-size: 72rpx;
+  font-weight: bold;
+  text-shadow: 0 0 20rpx currentColor;
+}
+
+.damage-number.damage {
+  color: var(--color-deep-red);
+}
+
+.damage-number.heal {
+  color: #00ff88;
+}
+
+@keyframes damageFloat {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-200rpx) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ==================== 暴击特效 ==================== */
+.crit-effect {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.crit-effect.active {
+  animation: critAppear 0.5s ease-out forwards;
+}
+
+.crit-text {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: var(--color-crazy-red);
+  text-shadow: 0 0 30rpx rgba(255, 46, 99, 0.8);
+}
+
+@keyframes critAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ==================== 闪避特效 ==================== */
+.dodge-effect {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.dodge-effect.active {
+  animation: dodgeAppear 0.5s ease-out forwards;
+}
+
+.dodge-text {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: #00d4ff;
+  text-shadow: 0 0 30rpx rgba(0, 212, 255, 0.8);
+}
+
+@keyframes dodgeAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ==================== 胜利特效 ==================== */
+.victory-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  text-align: center;
+}
+
+.victory-effect.active {
+  animation: victoryAppear 2s ease-out forwards;
+}
+
+.victory-crown {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 20rpx;
+  animation: crownBounce 1s ease-in-out infinite;
+}
+
+.victory-text {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+  text-shadow: 0 0 30rpx rgba(212, 175, 55, 0.8);
+}
+
+@keyframes victoryAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes crownBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20rpx);
+  }
+}
+
+/* ==================== 失败特效 ==================== */
+.defeat-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.defeat-effect.active {
+  animation: defeatAppear 2s ease-out forwards;
+}
+
+.defeat-text {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: var(--color-deep-red);
+  text-shadow: 0 0 30rpx rgba(179, 0, 27, 0.8);
+}
+
+@keyframes defeatAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ==================== 卡牌翻转效果 ==================== */
+.card-flip-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.card-flip-effect.active {
+  animation: cardFlip 0.5s ease-out forwards;
+}
+
+.flip-card {
+  width: 200rpx;
+  height: 280rpx;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.flip-front, .flip-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16rpx;
+  backface-visibility: hidden;
+}
+
+.flip-front {
+  background: linear-gradient(145deg, #2a2a3a 0%, #1a1a24 100%);
+  border: 2rpx solid var(--color-gold);
+}
+
+.flip-back {
+  background: repeating-linear-gradient(
+    45deg,
+    #1a1a24,
+    #1a1a24 10rpx,
+    #2a2a3a 10rpx,
+    #2a2a3a 20rpx
+  );
+  border: 2rpx solid var(--color-gold);
+  transform: rotateY(180deg);
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: translate(-50%, -50%) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateY(180deg);
+    opacity: 1;
+  }
+}
+
+/* ==================== 技能释放特效 ==================== */
+.skill-cast-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.skill-cast-effect.active {
+  animation: skillCast 1s ease-out forwards;
+}
+
+.skill-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%);
+  animation: skillGlowPulse 1s ease-in-out infinite;
+}
+
+@keyframes skillGlowPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.skill-particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.skill-particle {
+  position: absolute;
+  width: 8rpx;
+  height: 8rpx;
+  background: var(--color-neon-purple);
+  border-radius: 50%;
+  box-shadow: 0 0 15rpx var(--color-neon-purple);
+}
+
+.skill-cast-effect.active .skill-particle {
+  animation: skillParticleFloat 1s ease-out forwards;
+}
+
+.sp1 { top: -50rpx; left: -50rpx; animation-delay: 0s; }
+.sp2 { top: -50rpx; right: -50rpx; animation-delay: 0.2s; }
+.sp3 { bottom: -50rpx; left: 0; animation-delay: 0.4s; }
+
+@keyframes skillParticleFloat {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) translateY(-100rpx);
+    opacity: 0;
+  }
+}
+
+@keyframes skillCast {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ==================== 治疗特效 ==================== */
+.heal-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.heal-effect.active {
+  animation: healAppear 1s ease-out forwards;
+}
+
+.heal-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%);
+}
+
+.heal-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #00ff88;
+  text-shadow: 0 0 20rpx rgba(0, 255, 136, 0.8);
+}
+
+@keyframes healAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ==================== 眩晕特效 ==================== */
+.stun-effect {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.stun-effect.active {
+  animation: stunAppear 1s ease-out forwards;
+}
+
+.stun-stars {
+  display: flex;
+  gap: 10rpx;
+}
+
+.star {
+  font-size: 36rpx;
+  animation: starRotate 0.5s ease-in-out infinite;
+}
+
+.star:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.star:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes starRotate {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+}
+
+@keyframes stunAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}

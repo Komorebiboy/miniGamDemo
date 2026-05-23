@@ -1,0 +1,448 @@
+/* 命运赌局 - 设置页面样式 */
+
+.settings-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0D0D0D 0%, #1a0a0a 50%, #0D0D0D 100%);
+  padding: 30rpx 20rpx 120rpx;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ==================== 页面标题 ==================== */
+.page-header {
+  text-align: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx 0;
+}
+
+.page-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 10rpx;
+  letter-spacing: 4rpx;
+}
+
+.page-subtitle {
+  font-size: 24rpx;
+  color: var(--color-light-gray);
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.divider {
+  width: 200rpx;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 0 auto;
+}
+
+/* ==================== 设置分区 ==================== */
+.settings-section {
+  background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(10, 10, 15, 0.9) 100%);
+  border-radius: 20rpx;
+  padding: 25rpx;
+  margin-bottom: 25rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 0 15rpx rgba(0, 0, 0, 0.3);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 1rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.section-icon {
+  font-size: 36rpx;
+  margin-right: 12rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+}
+
+/* ==================== 设置项 ==================== */
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.setting-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 6rpx;
+}
+
+.setting-desc {
+  font-size: 22rpx;
+  color: var(--color-gray);
+  line-height: 1.4;
+}
+
+/* Switch 样式 */
+.setting-switch {
+  transform: scale(0.8);
+}
+
+/* Slider 容器 */
+.slider-container {
+  width: 200rpx;
+}
+
+.setting-slider {
+  width: 100%;
+}
+
+/* ==================== 画质选择器 ==================== */
+.quality-selector {
+  display: flex;
+  gap: 10rpx;
+}
+
+.quality-option {
+  padding: 10rpx 24rpx;
+  border-radius: 8rpx;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-light-gray);
+  font-size: 24rpx;
+  border: 1rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.quality-option.active {
+  background: linear-gradient(135deg, var(--color-deep-red), var(--color-gold));
+  color: white;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 10rpx rgba(212, 175, 55, 0.3);
+}
+
+/* ==================== 操作项 ==================== */
+.action-item {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-item:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.action-arrow {
+  font-size: 36rpx;
+  color: var(--color-gold);
+  font-weight: bold;
+}
+
+/* ==================== 版本文本 ==================== */
+.version-text {
+  font-size: 24rpx;
+  color: var(--color-gold);
+  font-weight: bold;
+}
+
+/* ==================== 返回按钮 ==================== */
+.back-section {
+  margin-top: 40rpx;
+  margin-bottom: 60rpx;
+  padding-bottom: 40rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.back-btn {
+  width: 80%;
+  max-width: 400rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  letter-spacing: 4rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #B3001B 0%, #D4AF37 100%);
+  border: 2rpx solid var(--color-gold);
+  color: white;
+  border-radius: 44rpx;
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.3);
+}
+
+.back-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 30rpx rgba(212, 175, 55, 0.5);
+}
+
+/* ==================== 动画 ==================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.settings-section {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ==================== 自定义弹窗 ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-container {
+  width: 85%;
+  max-width: 600rpx;
+  background: linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);
+  border-radius: 24rpx;
+  border: 2rpx solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 40rpx rgba(138, 43, 226, 0.3), 0 0 80rpx rgba(212, 175, 55, 0.1);
+  overflow: hidden;
+  transform: scale(0.9) translateY(20rpx);
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.show .modal-container {
+  transform: scale(1) translateY(0);
+}
+
+/* 弹窗头部 */
+.modal-header {
+  text-align: center;
+  padding: 40rpx 30rpx 20rpx;
+  position: relative;
+}
+
+.modal-icon {
+  font-size: 56rpx;
+  margin-bottom: 15rpx;
+  display: block;
+}
+
+.modal-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+  letter-spacing: 6rpx;
+  text-shadow: 0 0 20rpx rgba(212, 175, 55, 0.5);
+  display: block;
+}
+
+.modal-decoration {
+  width: 120rpx;
+  height: 3rpx;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 20rpx auto 0;
+}
+
+/* 弹窗内容 */
+.modal-body {
+  padding: 20rpx 30rpx;
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+/* 制作团队样式 */
+.credits-section {
+  padding: 20rpx 0;
+}
+
+.credit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0;
+  margin-bottom: 15rpx;
+}
+
+.credit-role {
+  font-size: 24rpx;
+  color: var(--color-light-gray);
+  margin-bottom: 10rpx;
+  letter-spacing: 2rpx;
+}
+
+.credit-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 4rpx;
+}
+
+.credit-name.highlight {
+  color: var(--color-gold);
+  text-shadow: 0 0 15rpx rgba(212, 175, 55, 0.6);
+  font-size: 42rpx;
+}
+
+.credit-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 25rpx 0;
+  gap: 15rpx;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+}
+
+.divider-text {
+  font-size: 22rpx;
+  color: var(--color-gold);
+  letter-spacing: 3rpx;
+  white-space: nowrap;
+}
+
+.credits-footer {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30rpx;
+  padding-top: 25rpx;
+  border-top: 1rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.version-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.version-label {
+  font-size: 20rpx;
+  color: var(--color-gray);
+  letter-spacing: 2rpx;
+}
+
+.version-number {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+}
+
+/* 用户协议样式 */
+.agreement-content {
+  max-height: 500rpx;
+}
+
+.agreement-section {
+  margin-bottom: 25rpx;
+  padding: 0 10rpx;
+}
+
+.agreement-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+}
+
+.agreement-text {
+  font-size: 24rpx;
+  color: var(--color-light-gray);
+  line-height: 1.6;
+  display: block;
+}
+
+.highlight-section {
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-top: 30rpx;
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+}
+
+.highlight-section .agreement-text {
+  color: var(--color-gold);
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 弹窗底部 */
+.modal-footer {
+  padding: 20rpx 30rpx 40rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-close-btn {
+  width: 70%;
+  max-width: 300rpx;
+  height: 76rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #B3001B 0%, #D4AF37 100%);
+  border: 2rpx solid var(--color-gold);
+  border-radius: 38rpx;
+  box-shadow: 0 0 20rpx rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 30rpx rgba(212, 175, 55, 0.5);
+}
+
+.close-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 4rpx;
+}
+
+/* 弹窗动画 */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-container {
+  animation: modalFadeIn 0.3s ease-out;
+}

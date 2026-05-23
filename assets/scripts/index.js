@@ -3,6 +3,11 @@
  * 供微信小程序使用
  */
 
+// ==================== 提前导入职业系统 ====================
+const ClassSystem = require('./data/ClassSystem.js');
+const EnemySystem = require('./data/EnemySystem.js');
+const { CardConditionChecker, CardEffectExecutor } = require('./CardEffectSystem.js');
+
 // ==================== 类型定义（JavaScript对象）====================
 
 const EntityType = {
@@ -63,6 +68,7 @@ const BattleEventType = {
   TURN_END: 'TURN_END',
   CARD_SELECTED: 'CARD_SELECTED',
   CARD_REVEALED: 'CARD_REVEALED',
+  ENEMY_CARD_REVEALED: 'ENEMY_CARD_REVEALED', // 新增：出牌阶段显示敌方卡牌
   ROLL_STARTED: 'ROLL_STARTED',
   ROLL_COMPLETED: 'ROLL_COMPLETED',
   RESOLUTION_COMPLETED: 'RESOLUTION_COMPLETED',
@@ -74,7 +80,13 @@ const BattleEventType = {
   EFFECT_EXPIRED: 'EFFECT_EXPIRED',
   ENTITY_DIED: 'ENTITY_DIED',
   ENERGY_CHANGED: 'ENERGY_CHANGED',
-  SHIELD_CHANGED: 'SHIELD_CHANGED'
+  SHIELD_CHANGED: 'SHIELD_CHANGED',
+  // 职业技能事件
+  SKILL_USED: 'SKILL_USED',
+  SKILL_READY: 'SKILL_READY',
+  SKILL_ANIMATION_START: 'SKILL_ANIMATION_START',
+  SKILL_ANIMATION_STAGE: 'SKILL_ANIMATION_STAGE',
+  SKILL_EFFECT_TRIGGERED: 'SKILL_EFFECT_TRIGGERED'
 };
 
 // ==================== 工具函数 ====================
@@ -322,7 +334,7 @@ class CardSystem {
     return shuffled;
   }
 
-  drawCards(entityId, count) {
+  drawCards(entityId, count, options = {}) {
     const deck = this._decks.get(entityId) || [];
     const hand = this._hands.get(entityId) || [];
     const discardPile = this._discardPiles.get(entityId) || [];
@@ -330,8 +342,20 @@ class CardSystem {
     const drawnCards = [];
     
     for (let i = 0; i < count; i++) {
-      // 如果牌库空了，洗牌
+      // 如果牌库空了
       if (deck.length === 0) {
+        // 硬核模式：牌库+弃牌堆都空了，就不能再抽牌
+        if (options.hardcoreMode) {
+          if (discardPile.length === 0) {
+            // 牌彻底打完了
+            console.log(`[CardSystem] ${entityId} 牌库耗尽！`);
+            break;
+          }
+          // 硬核模式下也不自动洗牌，需要手动调用reshuffle
+          break;
+        }
+        
+        // 普通模式：弃牌堆洗回牌库
         if (discardPile.length === 0) break;
         deck.push(...this._shuffle(discardPile));
         discardPile.length = 0;
@@ -343,6 +367,30 @@ class CardSystem {
     }
     
     return drawnCards;
+  }
+  
+  // 检查是否还有牌可抽
+  hasCardsLeft(entityId) {
+    const deck = this._decks.get(entityId) || [];
+    const discardPile = this._discardPiles.get(entityId) || [];
+    const hand = this._hands.get(entityId) || [];
+    
+    // 牌库 + 弃牌堆 + 手牌 = 总牌数
+    return deck.length > 0 || discardPile.length > 0 || hand.length > 0;
+  }
+  
+  // 获取剩余牌数
+  getRemainingCardsCount(entityId) {
+    const deck = this._decks.get(entityId) || [];
+    const discardPile = this._discardPiles.get(entityId) || [];
+    const hand = this._hands.get(entityId) || [];
+    
+    return {
+      deck: deck.length,
+      discard: discardPile.length,
+      hand: hand.length,
+      total: deck.length + discardPile.length + hand.length
+    };
   }
 
   getHand(entityId) {
@@ -383,9 +431,9 @@ class CardSystem {
     return card;
   }
 
-  onTurnStart(entityId, drawCount) {
+  onTurnStart(entityId, drawCount, options = {}) {
     this._cardsPlayedThisTurn.set(entityId, 0);
-    return this.drawCards(entityId, drawCount);
+    return this.drawCards(entityId, drawCount, options);
   }
 
   onTurnEnd(entityId) {
@@ -404,16 +452,14 @@ class Entity {
     this.id = config.id;
     this.name = config.name;
     this.type = config.type;
-    
+
     this.maxHealth = config.baseStats.maxHealth;
     this.currentHealth = config.baseStats.currentHealth;
-    this.maxEnergy = config.baseStats.maxEnergy;
-    this.currentEnergy = config.baseStats.currentEnergy;
     this.shield = config.baseStats.shield || 0;
-    
+
     this.deck = config.deck || [];
     this.cardsPlayedThisTurn = 0;
-    
+
     console.log(`[Entity] 创建实体: ${this.name}`);
   }
 
@@ -428,23 +474,9 @@ class Entity {
       type: this.type,
       health: this.currentHealth,
       maxHealth: this.maxHealth,
-      energy: this.currentEnergy,
-      maxEnergy: this.maxEnergy,
       shield: this.shield,
       isDead: this.isDead
     };
-  }
-
-  canUseCard(energyCost) {
-    return this.currentEnergy >= energyCost;
-  }
-
-  consumeEnergy(amount) {
-    this.currentEnergy = Math.max(0, this.currentEnergy - amount);
-  }
-
-  restoreEnergy(amount) {
-    this.currentEnergy = Math.min(this.maxEnergy, this.currentEnergy + amount);
   }
 
   takeDamage(damage, sourceId) {
@@ -483,7 +515,6 @@ class Entity {
 
   onTurnStart() {
     this.cardsPlayedThisTurn = 0;
-    this.restoreEnergy(this.maxEnergy);
   }
 
   onTurnEnd() {
@@ -508,7 +539,7 @@ class BattleManager {
     this._enemy = null;
     this._currentTurn = 0;
     this._maxTurns = 50;
-    this._drawCountPerTurn = 5;
+    this._drawCountPerTurn = 10; // 默认抽10张，与初始牌库大小一致
     this._playerSelectedCard = null;
     this._enemySelectedCard = null;
     this._playerConfirmed = false;
@@ -521,6 +552,13 @@ class BattleManager {
     this._dodgeThreshold = 5;
     this._critMultiplier = 1.5;
     this._speedBonusPerPoint = 2;
+    
+    // 卡牌效果执行器
+    this._cardEffectExecutor = new CardEffectExecutor(this);
+    
+    // 职业技能管理器
+    const { ClassSkillManager } = require('./data/ClassSkillSystem.js');
+    this._skillManager = ClassSkillManager.getInstance();
     
     console.log('[BattleManager] 初始化');
   }
@@ -586,6 +624,27 @@ class BattleManager {
     cardSystem.registerDeck(this._player.id, this._player.deck);
     cardSystem.registerDeck(this._enemy.id, this._enemy.deck);
 
+    // 初始化卡牌效果执行器的实体状态
+    this._cardEffectExecutor.initEntityState(this._player.id);
+    this._cardEffectExecutor.initEntityState(this._enemy.id);
+
+    // 初始化职业技能
+    const playerClass = this._player.classType || 'GAMBLER';
+    this._skillManager.initEntitySkill(this._player.id, playerClass);
+    
+    // 初始化敌人AI（如果敌人有AI配置）
+    if (this._enemy.aiConfig) {
+      const { EnemyAIDecisionMaker } = require('./data/EnemyAI.js');
+      this._enemyAI = new EnemyAIDecisionMaker(
+        this._enemy.aiConfig.aiType,
+        this._enemy.aiConfig
+      );
+    } else {
+      // 默认使用激进型AI
+      const { EnemyAIDecisionMaker, AIType } = require('./data/EnemyAI.js');
+      this._enemyAI = new EnemyAIDecisionMaker(AIType.AGGRESSIVE, {});
+    }
+
     // 触发战斗开始事件
     this._emitEvent(BattleEventType.BATTLE_START, {
       player: this._player.getStatus(),
@@ -618,16 +677,56 @@ class BattleManager {
     this._player.onTurnStart();
     this._enemy.onTurnStart();
 
-    // 抽牌
+    // 抽牌（硬核模式：牌用完不自动洗牌）
     const cardSystem = CardSystem.getInstance();
-    cardSystem.onTurnStart(this._player.id, this._drawCountPerTurn);
-    cardSystem.onTurnStart(this._enemy.id, this._drawCountPerTurn);
+    const playerDrawn = cardSystem.onTurnStart(this._player.id, this._drawCountPerTurn, { hardcoreMode: true });
+    const enemyDrawn = cardSystem.onTurnStart(this._enemy.id, this._drawCountPerTurn, { hardcoreMode: true });
+    
+    // 检查牌是否耗尽
+    const playerCardsLeft = cardSystem.hasCardsLeft(this._player.id);
+    const enemyCardsLeft = cardSystem.hasCardsLeft(this._enemy.id);
+    
+    if (!playerCardsLeft) {
+      console.log('[BattleManager] 玩家牌库耗尽，游戏结束');
+      this._emitEvent(BattleEventType.BATTLE_END, {
+        winner: EntityType.ENEMY,
+        reason: 'PLAYER_NO_CARDS'
+      });
+      this.endBattle();
+      return;
+    }
+    
+    if (!enemyCardsLeft) {
+      console.log('[BattleManager] 敌人牌库耗尽，玩家胜利');
+      this._emitEvent(BattleEventType.BATTLE_END, {
+        winner: EntityType.PLAYER,
+        reason: 'ENEMY_NO_CARDS'
+      });
+      this.endBattle();
+      return;
+    }
+
+    // 处理职业技能回合开始（冷却减少等）
+    const playerSkillTurnStart = this._skillManager.onTurnStart(this._player.id);
+    if (playerSkillTurnStart && playerSkillTurnStart.length > 0) {
+      playerSkillTurnStart.forEach(result => {
+        if (result.type === 'skill_ready') {
+          this._emitEvent(BattleEventType.SKILL_READY, {
+            entity: EntityType.PLAYER,
+            skillId: result.skillId
+          });
+        }
+      });
+    }
 
     // 触发回合开始事件
     this._emitEvent(BattleEventType.TURN_START, {
       turnNumber: this._currentTurn,
       player: this._player.getStatus(),
-      enemy: this._enemy.getStatus()
+      enemy: this._enemy.getStatus(),
+      playerCardsRemaining: cardSystem.getRemainingCardsCount(this._player.id),
+      enemyCardsRemaining: cardSystem.getRemainingCardsCount(this._enemy.id),
+      playerSkillState: this.getPlayerSkillState()
     });
 
     // 敌人AI选择卡牌
@@ -639,20 +738,56 @@ class BattleManager {
 
     const cardSystem = CardSystem.getInstance();
     const hand = cardSystem.getHand(this._enemy.id);
-    const playableCards = hand.filter(card =>
-      this._enemy.canUseCard(card.energyCost)
-    );
 
-    if (playableCards.length > 0) {
-      // AI策略：优先选择高价值卡牌
-      playableCards.sort((a, b) => b.baseValue - a.baseValue);
-      const selectedCard = playableCards[0];
+    if (hand.length > 0) {
+      // 使用新的AI决策系统
+      let selectedCard = null;
+      
+      if (this._enemyAI) {
+        // 构建战斗状态
+        const battleState = {
+          enemyHpPercent: this._enemy.currentHealth / this._enemy.maxHealth,
+          playerHpPercent: this._player ? this._player.currentHealth / this._player.maxHealth : 1,
+          currentTurn: this._currentTurn
+        };
+        
+        // AI选择卡牌
+        selectedCard = this._enemyAI.selectCard(hand, battleState);
+        
+        // 记录玩家出牌历史（用于预知型AI）
+        if (this._playerSelectedCard) {
+          this._enemyAI.recordPlayerCard(this._playerSelectedCard);
+        }
+        
+        // 检查是否使用技能
+        if (this._enemyAI.shouldUseSkill(battleState)) {
+          console.log(`[BattleManager] 敌人使用技能: ${this._enemy.aiConfig?.skill?.name || '未知技能'}`);
+          // 触发敌人技能使用事件
+          this._emitEvent(BattleEventType.SKILL_USED, {
+            entity: EntityType.ENEMY,
+            skill: this._enemy.aiConfig?.skill
+          });
+        }
+      } else {
+        // 默认策略：优先选择高价值卡牌
+        hand.sort((a, b) => b.baseValue - a.baseValue);
+        selectedCard = hand[0];
+      }
 
       this._enemySelectedCard = selectedCard;
       this._enemyConfirmed = true;
       this._enemy.markCardPlayed();
 
-      console.log(`[BattleManager] 敌人选择卡牌: ${selectedCard.name}`);
+      if (selectedCard) {
+        console.log(`[BattleManager] 敌人选择卡牌: ${selectedCard.name}`);
+        
+        // 立即触发事件，让玩家看到敌方要出的牌（出牌阶段可见）
+        this._emitEvent(BattleEventType.ENEMY_CARD_REVEALED, {
+          enemyCard: this._enemySelectedCard
+        });
+      } else {
+        console.log('[BattleManager] 敌人选择空过');
+      }
     } else {
       console.log('[BattleManager] 敌人无牌可出');
       this._enemyConfirmed = true;
@@ -673,8 +808,20 @@ class BattleManager {
       return false;
     }
 
-    if (!this._player.canUseCard(card.energyCost)) {
-      console.warn('[BattleManager] 能量不足');
+    // 检查卡牌使用条件
+    const conditionChecker = new CardConditionChecker(this);
+    const battleState = this._getCurrentBattleState();
+    const canUse = conditionChecker.checkCanUseCard(this._player, card, battleState);
+    
+    if (!canUse.canUse) {
+      console.log(`[BattleManager] 无法使用卡牌 ${card.name}: ${canUse.reason}`);
+      // 触发卡牌无法使用事件，UI可以显示原因
+      this._emitEvent(BattleEventType.CARD_SELECTED, {
+        entity: EntityType.PLAYER,
+        card: card,
+        canUse: false,
+        reason: canUse.reason
+      });
       return false;
     }
 
@@ -683,11 +830,111 @@ class BattleManager {
     // 触发卡牌选择事件
     this._emitEvent(BattleEventType.CARD_SELECTED, {
       entity: EntityType.PLAYER,
-      card: card
+      card: card,
+      canUse: true,
+      reason: ''
     });
 
     console.log(`[BattleManager] 玩家选择卡牌: ${card.name}`);
     return true;
+  }
+
+  /**
+   * 玩家使用职业技能
+   */
+  playerUseSkill() {
+    if (!this._isBattleActive || !this._player) {
+      return { success: false, reason: '战斗未进行' };
+    }
+
+    const result = this._skillManager.useSkill(this._player.id, this._getCurrentBattleState());
+    
+    if (result.success) {
+      console.log(`[BattleManager] 玩家使用技能: ${result.skill.name}`);
+      
+      // 触发技能使用事件
+      this._emitEvent(BattleEventType.SKILL_USED, {
+        entity: EntityType.PLAYER,
+        skill: result.skill,
+        effects: result.effects,
+        state: result.state
+      });
+
+      // 播放技能动画
+      const { SkillAnimationManager } = require('./animation/SkillAnimationSystem.js');
+      const animManager = SkillAnimationManager.getInstance();
+      
+      // 根据职业类型播放对应动画
+      let animType;
+      switch (result.skill.classType) {
+        case 'GAMBLER':
+          animType = 'DICE_SPIN';
+          break;
+        case 'MAGICIAN':
+          animType = 'CARD_SHATTER';
+          break;
+        case 'EXECUTIONER':
+          animType = 'GUILLOTINE_FALL';
+          break;
+        case 'MANIAC':
+          animType = 'BLOOD_RAGE';
+          break;
+      }
+      
+      if (animType) {
+        animManager.playAnimation(animType, {
+          onStart: (data) => {
+            this._emitEvent(BattleEventType.SKILL_ANIMATION_START, data);
+          },
+          onStageChange: (data) => {
+            this._emitEvent(BattleEventType.SKILL_ANIMATION_STAGE, data);
+          }
+        });
+      }
+    } else {
+      console.log(`[BattleManager] 无法使用技能: ${result.reason}`);
+    }
+
+    return result;
+  }
+
+  /**
+   * 获取玩家技能状态
+   */
+  getPlayerSkillState() {
+    if (!this._player) return null;
+    return this._skillManager.getSkillState(this._player.id);
+  }
+
+  /**
+   * 检查玩家技能是否可用
+   */
+  canPlayerUseSkill() {
+    if (!this._player) return false;
+    return this._skillManager.canUseSkill(this._player.id);
+  }
+
+  /**
+   * 获取当前战斗状态
+   */
+  _getCurrentBattleState() {
+    // 从CardEffectExecutor获取实体状态（如果有的话）
+    let lastRollWasCrit = false;
+    
+    // 检查是否有CardEffectExecutor实例
+    if (this._cardEffectExecutor) {
+      const playerState = this._cardEffectExecutor.getEntityState(this._player?.id);
+      if (playerState) {
+        lastRollWasCrit = playerState.lastRollWasCrit || false;
+      }
+    }
+
+    return {
+      lastRollWasCrit: lastRollWasCrit,
+      currentTurn: this._currentTurn,
+      playerHealthPercent: this._player ? (this._player.currentHealth / this._player.maxHealth) : 1,
+      enemyHealthPercent: this._enemy ? (this._enemy.currentHealth / this._enemy.maxHealth) : 1
+    };
   }
 
   playerConfirmCard() {
@@ -715,9 +962,10 @@ class BattleManager {
 
   _checkBothConfirmed() {
     if (this._playerConfirmed && this._enemyConfirmed) {
+      // 延迟执行结算，让玩家感觉到"双方都已确认"
       setTimeout(() => {
         this._resolveTurn();
-      }, 500);
+      }, 1000);
     }
   }
 
@@ -897,21 +1145,19 @@ class BattleManager {
 
     await this._executeBattleEffects(result, playerResult, enemyResult);
 
-    // 消耗能量
+    // 使用卡牌（移入弃牌堆）
     if (this._playerSelectedCard) {
-      this._player.consumeEnergy(this._playerSelectedCard.energyCost);
       cardSystem.useCard(
         this._player.id,
         this._playerSelectedCard.instanceId,
-        this._playerSelectedCard.energyCost
+        0
       );
     }
     if (this._enemySelectedCard) {
-      this._enemy.consumeEnergy(this._enemySelectedCard.energyCost);
       cardSystem.useCard(
         this._enemy.id,
         this._enemySelectedCard.instanceId,
-        this._enemySelectedCard.energyCost
+        0
       );
     }
 
@@ -935,9 +1181,11 @@ class BattleManager {
       };
     }
 
-    const baseValue = card.baseValue;
+    // 游戏核心规则：Roll值本身就是伤害，不再加baseValue
+    // baseValue只用于计算暴击加成
+    const baseValue = card.baseValue || 0;
     const isCrit = rollValue >= this._critThreshold;
-    const critBonus = isCrit ? Math.floor(baseValue * (this._critMultiplier - 1)) : 0;
+    const critBonus = isCrit ? Math.floor(rollValue * (this._critMultiplier - 1)) : 0;
 
     let buffBonus = 0;
     const effectSystem = EffectSystem.getInstance();
@@ -946,9 +1194,10 @@ class BattleManager {
       buffBonus += strengthEffects.reduce((sum, e) => sum + e.value, 0);
     }
 
-    let statusBonus = critBonus;
+    const statusBonus = critBonus;
     const speedBonus = card.speed * this._speedBonusPerPoint;
-    const finalValue = baseValue + rollValue + buffBonus + statusBonus + speedBonus;
+    // 最终值 = Roll值 + 暴击加成 + Buff加成 + 速度加成
+    const finalValue = rollValue + statusBonus + buffBonus + speedBonus;
 
     return {
       baseValue,
@@ -967,7 +1216,45 @@ class BattleManager {
 
     console.log(`[BattleManager] 执行战斗效果，胜者: ${winner}`);
 
-    // 处理防御牌效果（给己方加护盾）
+    // 执行玩家卡牌的特殊效果（如果有）
+    if (this._playerSelectedCard && this._playerSelectedCard.effects && this._playerSelectedCard.effects.length > 0) {
+      console.log(`[BattleManager] 执行玩家卡牌 ${this._playerSelectedCard.name} 的特殊效果`);
+      const playerCardEffects = this._cardEffectExecutor.executeCardEffects(
+        this._player,
+        this._enemy,
+        this._playerSelectedCard,
+        playerResult
+      );
+      console.log(`[BattleManager] 玩家卡牌效果执行结果:`, playerCardEffects);
+      
+      // 触发卡牌效果执行事件
+      this._emitEvent(BattleEventType.EFFECT_APPLIED, {
+        source: EntityType.PLAYER,
+        cardName: this._playerSelectedCard.name,
+        effects: playerCardEffects.effects
+      });
+    }
+
+    // 执行敌人卡牌的特殊效果（如果有）
+    if (this._enemySelectedCard && this._enemySelectedCard.effects && this._enemySelectedCard.effects.length > 0) {
+      console.log(`[BattleManager] 执行敌人卡牌 ${this._enemySelectedCard.name} 的特殊效果`);
+      const enemyCardEffects = this._cardEffectExecutor.executeCardEffects(
+        this._enemy,
+        this._player,
+        this._enemySelectedCard,
+        enemyResult
+      );
+      console.log(`[BattleManager] 敌人卡牌效果执行结果:`, enemyCardEffects);
+      
+      // 触发卡牌效果执行事件
+      this._emitEvent(BattleEventType.EFFECT_APPLIED, {
+        source: EntityType.ENEMY,
+        cardName: this._enemySelectedCard.name,
+        effects: enemyCardEffects.effects
+      });
+    }
+
+    // 处理防御牌效果（给己方加护盾）- 基础防御效果
     if (this._playerSelectedCard?.type === CardType.DEFENSE && this._player) {
       const shieldAmount = playerResult.finalValue;
       this._player.addShield(shieldAmount);
@@ -1063,6 +1350,40 @@ class BattleManager {
     effectSystem.onTurnEnd(this._player.id);
     effectSystem.onTurnEnd(this._enemy.id);
 
+    // 执行卡牌效果执行器的回合结束处理（赌债结算、延迟伤害等）
+    const playerEffectResults = this._cardEffectExecutor.onTurnEnd(this._player.id);
+    const enemyEffectResults = this._cardEffectExecutor.onTurnEnd(this._enemy.id);
+
+    // 触发赌债/延迟伤害事件
+    if (playerEffectResults.length > 0) {
+      console.log(`[BattleManager] 玩家回合结束效果:`, playerEffectResults);
+      playerEffectResults.forEach(result => {
+        this._emitEvent(BattleEventType.EFFECT_TRIGGERED, {
+          entity: EntityType.PLAYER,
+          effect: result
+        });
+      });
+    }
+
+    if (enemyEffectResults.length > 0) {
+      console.log(`[BattleManager] 敌人回合结束效果:`, enemyEffectResults);
+      enemyEffectResults.forEach(result => {
+        this._emitEvent(BattleEventType.EFFECT_TRIGGERED, {
+          entity: EntityType.ENEMY,
+          effect: result
+        });
+      });
+    }
+
+    // 处理职业技能回合结束
+    const playerSkillResults = this._skillManager.onTurnEnd(this._player.id, { winner: null });
+    if (playerSkillResults) {
+      this._emitEvent(BattleEventType.SKILL_EFFECT_TRIGGERED, {
+        entity: EntityType.PLAYER,
+        effect: playerSkillResults
+      });
+    }
+
     cardSystem.onTurnEnd(this._player.id);
     cardSystem.onTurnEnd(this._enemy.id);
 
@@ -1097,6 +1418,19 @@ class BattleManager {
         const playerHpPercent = this._player.currentHealth / this._player.maxHealth;
         const enemyHpPercent = this._enemy.currentHealth / this._enemy.maxHealth;
         winner = playerHpPercent >= enemyHpPercent ? EntityType.PLAYER : EntityType.ENEMY;
+      }
+    }
+
+    // 处理热手和连胜状态
+    if (this._player && this._cardEffectExecutor) {
+      if (winner === EntityType.PLAYER) {
+        // 玩家胜利，增加连胜和热手
+        const winResult = this._cardEffectExecutor.onBattleWin(this._player.id);
+        console.log(`[BattleManager] 玩家胜利，连胜: ${winResult.consecutiveWins}, 热手: ${winResult.hotHandStacks}`);
+      } else if (winner === EntityType.ENEMY) {
+        // 玩家失败，重置热手
+        const lossResult = this._cardEffectExecutor.onBattleLoss(this._player.id);
+        console.log(`[BattleManager] 玩家失败，热手重置，失去层数: ${lossResult.lostStacks}`);
       }
     }
 
@@ -1259,12 +1593,14 @@ const ENEMY_DECK = [
   }
 ];
 
-function getStartingDeck() {
-  return STARTING_DECK;
+function getStartingDeck(playerClass = 'GAMBLER') {
+  // 使用 ClassSystem 生成职业专属牌组
+  return ClassSystem.getClassDeck(playerClass);
 }
 
 function getEnemyDeck() {
-  return ENEMY_DECK;
+  // 使用 EnemySystem 生成敌人牌组
+  return EnemySystem.getEnemyDeck('JOKER_GAMBLER');
 }
 
 // ==================== 导出 ====================
@@ -1297,3 +1633,154 @@ module.exports = {
   generateId,
   delay
 };
+
+// ==================== 职业系统导入（ClassSystem和EnemySystem已在文件开头导入）====================
+const MapSystem = require('./data/MapSystem.js');
+const RelicSystem = require('./data/RelicSystem.js');
+const EventSystem = require('./data/EventSystem.js');
+const ProgressionSystem = require('./data/ProgressionSystem.js');
+
+// 导出职业系统
+module.exports.PlayerClass = ClassSystem.PlayerClass;
+module.exports.CLASS_CONFIG = ClassSystem.CLASS_CONFIG;
+module.exports.getClassDeck = ClassSystem.getClassDeck;
+module.exports.getClassConfig = ClassSystem.getClassConfig;
+module.exports.GAMBLER_CARDS = ClassSystem.GAMBLER_CARDS;
+module.exports.MAGICIAN_CARDS = ClassSystem.MAGICIAN_CARDS;
+module.exports.EXECUTIONER_CARDS = ClassSystem.EXECUTIONER_CARDS;
+module.exports.MANIAC_CARDS = ClassSystem.MANIAC_CARDS;
+
+// 导出扩展卡牌（流派卡牌）
+module.exports.GAMBLER_EXTENDED_CARDS = ClassSystem.GAMBLER_EXTENDED_CARDS;
+module.exports.MAGICIAN_EXTENDED_CARDS = ClassSystem.MAGICIAN_EXTENDED_CARDS;
+module.exports.EXECUTIONER_EXTENDED_CARDS = ClassSystem.EXECUTIONER_EXTENDED_CARDS;
+module.exports.MANIAC_EXTENDED_CARDS = ClassSystem.MANIAC_EXTENDED_CARDS;
+
+// 导出职业主动技能系统
+const ClassSkillSystem = require('./data/ClassSkillSystem.js');
+module.exports.CLASS_SKILLS = ClassSkillSystem.CLASS_SKILLS;
+module.exports.ClassSkillManager = ClassSkillSystem.ClassSkillManager;
+
+// 导出技能动画系统
+const SkillAnimationSystem = require('./animation/SkillAnimationSystem.js');
+module.exports.SkillAnimationType = SkillAnimationSystem.SkillAnimationType;
+module.exports.SKILL_ANIMATION_CONFIG = SkillAnimationSystem.SKILL_ANIMATION_CONFIG;
+module.exports.SkillAnimationManager = SkillAnimationSystem.SkillAnimationManager;
+
+// 导出敌人AI系统
+const EnemyAI = require('./data/EnemyAI.js');
+module.exports.AIType = EnemyAI.AIType;
+module.exports.AI_BEHAVIOR_WEIGHTS = EnemyAI.AI_BEHAVIOR_WEIGHTS;
+module.exports.EnemyAIDecisionMaker = EnemyAI.EnemyAIDecisionMaker;
+
+// 导出第一阶段敌人系统
+const EnemyPhase1 = require('./data/EnemyPhase1.js');
+module.exports.EnemyFaction = EnemyPhase1.EnemyFaction;
+module.exports.DangerLevel = EnemyPhase1.DangerLevel;
+module.exports.ENEMY_SKILLS = EnemyPhase1.ENEMY_SKILLS;
+module.exports.NORMAL_ENEMIES = EnemyPhase1.NORMAL_ENEMIES;
+module.exports.BOSS_ENEMIES = EnemyPhase1.BOSS_ENEMIES;
+module.exports.EnemyGenerator = EnemyPhase1.EnemyGenerator;
+
+// 导出第二阶段精英敌人系统
+const EnemyPhase2 = require('./data/EnemyPhase2.js');
+module.exports.EliteAbilityType = EnemyPhase2.EliteAbilityType;
+module.exports.ELITE_ENEMIES = EnemyPhase2.ELITE_ENEMIES;
+module.exports.EliteEnemyGenerator = EnemyPhase2.EliteEnemyGenerator;
+module.exports.EliteAbilityProcessor = EnemyPhase2.EliteAbilityProcessor;
+
+// 导出恶魔庄家Boss系统
+const BossDevilDealer = require('./data/BossDevilDealer.js');
+module.exports.BossPhase = BossDevilDealer.BossPhase;
+module.exports.DebtType = BossDevilDealer.DebtType;
+module.exports.DEBT_COSTS = BossDevilDealer.DEBT_COSTS;
+module.exports.DEVIL_DEALER_CARDS = BossDevilDealer.DEVIL_DEALER_CARDS;
+module.exports.DEVIL_DEALER_CONFIG = BossDevilDealer.DEVIL_DEALER_CONFIG;
+module.exports.DevilDealerBoss = BossDevilDealer.DevilDealerBoss;
+module.exports.DevilDealerGenerator = BossDevilDealer.DevilDealerGenerator;
+
+// 导出舞台主宰Boss系统
+const BossStageMaster = require('./data/BossStageMaster.js');
+module.exports.StagePhase = BossStageMaster.StagePhase;
+module.exports.FakeInfoType = BossStageMaster.FakeInfoType;
+module.exports.PlayerBehaviorType = BossStageMaster.PlayerBehaviorType;
+module.exports.SpotlightType = BossStageMaster.SpotlightType;
+module.exports.STAGE_MASTER_CARDS = BossStageMaster.STAGE_MASTER_CARDS;
+module.exports.STAGE_MASTER_CONFIG = BossStageMaster.STAGE_MASTER_CONFIG;
+module.exports.StageMasterBoss = BossStageMaster.StageMasterBoss;
+module.exports.StageMasterGenerator = BossStageMaster.StageMasterGenerator;
+
+// 导出机械裁决者Boss系统
+const BossMachineJudge = require('./data/BossMachineJudge.js');
+module.exports.JudgePhase = BossMachineJudge.JudgePhase;
+module.exports.RuleType = BossMachineJudge.RuleType;
+module.exports.RULE_VIOLATION_PENALTIES = BossMachineJudge.RULE_VIOLATION_PENALTIES;
+module.exports.MACHINE_JUDGE_CARDS = BossMachineJudge.MACHINE_JUDGE_CARDS;
+module.exports.MACHINE_JUDGE_CONFIG = BossMachineJudge.MACHINE_JUDGE_CONFIG;
+module.exports.MachineJudgeBoss = BossMachineJudge.MachineJudgeBoss;
+module.exports.MachineJudgeGenerator = BossMachineJudge.MachineJudgeGenerator;
+
+// 导出终末狂徒Boss系统
+const BossFinalMadman = require('./data/BossFinalMadman.js');
+module.exports.MadmanPhase = BossFinalMadman.MadmanPhase;
+module.exports.CorruptionType = BossFinalMadman.CorruptionType;
+module.exports.CORRUPTION_RULES = BossFinalMadman.CORRUPTION_RULES;
+module.exports.FINAL_MADMAN_CARDS = BossFinalMadman.FINAL_MADMAN_CARDS;
+module.exports.FINAL_MADMAN_CONFIG = BossFinalMadman.FINAL_MADMAN_CONFIG;
+module.exports.FinalMadmanBoss = BossFinalMadman.FinalMadmanBoss;
+module.exports.FinalMadmanGenerator = BossFinalMadman.FinalMadmanGenerator;
+
+// 导出命运之主Boss系统
+const BossLordOfFate = require('./data/BossLordOfFate.js');
+module.exports.FatePhase = BossLordOfFate.FatePhase;
+module.exports.PlayerBehavior = BossLordOfFate.PlayerBehavior;
+module.exports.FateModification = BossLordOfFate.FateModification;
+module.exports.LORD_OF_FATE_CARDS = BossLordOfFate.LORD_OF_FATE_CARDS;
+module.exports.LORD_OF_FATE_CONFIG = BossLordOfFate.LORD_OF_FATE_CONFIG;
+module.exports.LordOfFateBoss = BossLordOfFate.LordOfFateBoss;
+module.exports.LordOfFateGenerator = BossLordOfFate.LordOfFateGenerator;
+
+// 导出敌人系统
+module.exports.EnemyType = EnemySystem.EnemyType;
+module.exports.ENEMY_CONFIGS = EnemySystem.ENEMY_CONFIGS;
+module.exports.getEnemyDeckByType = EnemySystem.getEnemyDeck;
+module.exports.getEnemyConfig = EnemySystem.getEnemyConfig;
+module.exports.STAGE_CONFIG = EnemySystem.STAGE_CONFIG;
+
+// 导出地图系统
+module.exports.NodeType = MapSystem.NodeType;
+module.exports.AreaTheme = MapSystem.AreaTheme;
+module.exports.MapGenerator = MapSystem.MapGenerator;
+module.exports.NODE_ICONS = MapSystem.NODE_ICONS;
+module.exports.NODE_COLORS = MapSystem.NODE_COLORS;
+
+// 导出遗物系统
+module.exports.RelicRarity = RelicSystem.RelicRarity;
+module.exports.RelicType = RelicSystem.RelicType;
+module.exports.RELICS = RelicSystem.RELICS;
+module.exports.BUILD_CORES = RelicSystem.BUILD_CORES;
+module.exports.RelicManager = RelicSystem.RelicManager;
+
+// 导出事件系统
+module.exports.EventType = EventSystem.EventType;
+module.exports.EVENTS = EventSystem.EVENTS;
+module.exports.EventManager = EventSystem.EventManager;
+
+// 导出成长系统
+module.exports.AchievementType = ProgressionSystem.AchievementType;
+module.exports.ACHIEVEMENTS = ProgressionSystem.ACHIEVEMENTS;
+module.exports.UNLOCKABLES = ProgressionSystem.UNLOCKABLES;
+module.exports.ProgressionManager = ProgressionSystem.ProgressionManager;
+
+// 导出Roguelike系统
+const RoguelikeSystem = require('./data/RoguelikeSystem.js');
+module.exports.RoguelikeManager = RoguelikeSystem.RoguelikeManager;
+
+// 导出动画系统
+const AnimationSystem = require('./animation/AnimationSystem.js');
+const BattleAnimationController = require('./animation/BattleAnimationController.js');
+module.exports.AnimationType = AnimationSystem.AnimationType;
+module.exports.ANIMATION_CONFIG = AnimationSystem.ANIMATION_CONFIG;
+module.exports.AnimationManager = AnimationSystem.AnimationManager;
+module.exports.BattleAnimationController = BattleAnimationController.BattleAnimationController;
+module.exports.injectBattleStyles = BattleAnimationController.injectBattleStyles;

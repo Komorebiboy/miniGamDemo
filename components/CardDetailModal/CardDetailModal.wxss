@@ -1,0 +1,482 @@
+/* components/CardDetailModal/CardDetailModal.wxss */
+
+/* ============================================
+   卡牌详情弹窗 - 暗黑赌场风格
+   ============================================ */
+
+.card-detail-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(10rpx);
+}
+
+.card-detail-container {
+  position: relative;
+  width: 85%;
+  max-width: 600rpx;
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(50rpx);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 关闭按钮 */
+.close-btn {
+  position: absolute;
+  top: -60rpx;
+  right: 0;
+  width: 60rpx;
+  height: 60rpx;
+  background: linear-gradient(145deg, #d4af37 0%, #b8941f 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #0a0a0f;
+  font-weight: bold;
+  box-shadow: 0 0 30rpx rgba(212, 175, 55, 0.5);
+  z-index: 10;
+}
+
+/* ============================================
+   卡牌展示区域
+   ============================================ */
+.card-showcase {
+  background: linear-gradient(145deg, #1a1a24 0%, #0f0f14 100%);
+  border-radius: 30rpx;
+  padding: 40rpx;
+  border: 3rpx solid;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 稀有度光效 */
+.rarity-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: radial-gradient(ellipse at center, currentColor 0%, transparent 70%);
+  opacity: 0.1;
+  animation: glowRotate 10s linear infinite;
+}
+
+@keyframes glowRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 稀有度边框颜色 */
+.card-showcase.COMMON {
+  border-color: #888;
+  color: #888;
+}
+.card-showcase.UNCOMMON {
+  border-color: #00d4ff;
+  color: #00d4ff;
+}
+.card-showcase.RARE {
+  border-color: #bf00ff;
+  color: #bf00ff;
+}
+.card-showcase.LEGENDARY {
+  border-color: #ffd700;
+  color: #ffd700;
+}
+.card-showcase.FINISHER,
+.card-showcase.finisher {
+  border-color: #ff0040;
+  color: #ff0040;
+  box-shadow: 
+    0 0 60rpx rgba(255, 0, 64, 0.3),
+    inset 0 0 60rpx rgba(255, 0, 64, 0.1);
+}
+
+/* 卡牌头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.card-type-badge {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.card-type-badge.ATTACK { background: rgba(255, 0, 64, 0.3); color: #ff0040; }
+.card-type-badge.DEFENSE { background: rgba(0, 212, 255, 0.3); color: #00d4ff; }
+.card-type-badge.SKILL { background: rgba(191, 0, 255, 0.3); color: #bf00ff; }
+.card-type-badge.FINISHER { background: rgba(255, 0, 64, 0.5); color: #ff0040; }
+
+.card-risk {
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.card-risk.SAFE { background: rgba(0, 255, 128, 0.2); color: #00ff80; }
+.card-risk.MODERATE { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+.card-risk.HIGH { background: rgba(255, 0, 64, 0.2); color: #ff0040; }
+.card-risk.EXTREME { 
+  background: linear-gradient(90deg, #ff0040 0%, #bf00ff 100%);
+  color: #fff;
+  animation: extremePulse 1s ease-in-out infinite;
+}
+
+@keyframes extremePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* 卡牌名称 */
+.card-name-section {
+  text-align: center;
+  margin-bottom: 30rpx;
+  position: relative;
+}
+
+.card-name {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #d4af37;
+  text-shadow: 0 0 20rpx rgba(212, 175, 55, 0.5);
+  display: block;
+}
+
+.card-name.mysterious {
+  color: #888;
+  text-shadow: none;
+}
+
+.finisher-badge {
+  display: inline-block;
+  margin-top: 10rpx;
+  padding: 6rpx 20rpx;
+  background: linear-gradient(90deg, #ff0040 0%, #bf00ff 100%);
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: bold;
+  border-radius: 20rpx;
+  animation: finisherGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes finisherGlow {
+  0%, 100% { box-shadow: 0 0 20rpx rgba(255, 0, 64, 0.5); }
+  50% { box-shadow: 0 0 40rpx rgba(255, 0, 64, 0.8); }
+}
+
+/* 卡牌立绘区域 */
+.card-artwork {
+  width: 100%;
+  height: 300rpx;
+  background: linear-gradient(145deg, #0a0a0f 0%, #1a1a24 100%);
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+  position: relative;
+  overflow: hidden;
+  border: 2rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.artwork-placeholder {
+  font-size: 120rpx;
+  opacity: 0.8;
+}
+
+.artwork-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.effect-line {
+  position: absolute;
+  width: 100%;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.3;
+  animation: lineMove 3s ease-in-out infinite;
+}
+
+.effect-line:nth-child(1) { top: 30%; animation-delay: 0s; }
+.effect-line:nth-child(2) { top: 50%; animation-delay: 1s; }
+.effect-line:nth-child(3) { top: 70%; animation-delay: 2s; }
+
+@keyframes lineMove {
+  0%, 100% { transform: translateX(-100%); opacity: 0; }
+  50% { transform: translateX(100%); opacity: 0.5; }
+}
+
+/* 核心数据 */
+.card-core-stats {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.stat-box {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  text-align: center;
+  border: 2rpx solid rgba(212, 175, 55, 0.2);
+  position: relative;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.stat-value {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #d4af37;
+}
+
+.stat-value.fake {
+  color: #666;
+  text-decoration: line-through;
+}
+
+.range-number {
+  display: inline-block;
+}
+
+.range-separator {
+  margin: 0 10rpx;
+  opacity: 0.5;
+}
+
+.fake-hint {
+  position: absolute;
+  top: 10rpx;
+  right: 10rpx;
+  width: 30rpx;
+  height: 30rpx;
+  background: #ff0040;
+  border-radius: 50%;
+  font-size: 20rpx;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: hintPulse 1s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.speed-bar {
+  width: 100%;
+  height: 8rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4rpx;
+  margin-top: 10rpx;
+  overflow: hidden;
+}
+
+.speed-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff 0%, #d4af37 100%);
+  border-radius: 4rpx;
+  transition: width 0.5s ease;
+}
+
+/* 效果描述 */
+.card-effects {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 20rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  border: 2rpx solid rgba(212, 175, 55, 0.2);
+}
+
+.card-effects.fake-effects {
+  border-color: rgba(255, 0, 64, 0.3);
+  background: rgba(255, 0, 64, 0.05);
+}
+
+.effects-title {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 10rpx;
+}
+
+.effect-list {
+  margin-bottom: 15rpx;
+}
+
+.effect-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 8rpx;
+  font-size: 26rpx;
+  color: #d4af37;
+}
+
+.effect-icon {
+  font-size: 28rpx;
+}
+
+.description {
+  font-size: 24rpx;
+  color: #aaa;
+  font-style: italic;
+  border-top: 1rpx solid rgba(212, 175, 55, 0.2);
+  padding-top: 15rpx;
+}
+
+/* 无效果提示 */
+.no-effects {
+  font-size: 24rpx;
+  color: #666;
+  font-style: italic;
+  padding: 15rpx 0;
+  text-align: center;
+}
+
+/* 标签 */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.tag {
+  padding: 6rpx 16rpx;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1rpx solid rgba(212, 175, 55, 0.3);
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  color: #d4af37;
+}
+
+.tag.finisher { background: rgba(255, 0, 64, 0.2); border-color: #ff0040; color: #ff0040; }
+.tag.gamble { background: rgba(191, 0, 255, 0.2); border-color: #bf00ff; color: #bf00ff; }
+.tag.deception { background: rgba(255, 193, 7, 0.2); border-color: #ffc107; color: #ffc107; }
+.tag.insight { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; color: #00d4ff; }
+
+/* 洞察区域 */
+.insight-section {
+  background: linear-gradient(145deg, rgba(191, 0, 255, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  text-align: center;
+  border: 2rpx solid rgba(191, 0, 255, 0.3);
+}
+
+.insight-hint {
+  margin-bottom: 20rpx;
+}
+
+.hint-icon {
+  font-size: 48rpx;
+  display: block;
+  margin-bottom: 10rpx;
+  animation: eyeBlink 2s ease-in-out infinite;
+}
+
+@keyframes eyeBlink {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0.3; }
+}
+
+.hint-text {
+  font-size: 28rpx;
+  color: #bf00ff;
+  font-weight: bold;
+}
+
+.insight-cost {
+  font-size: 26rpx;
+  color: #d4af37;
+  margin-bottom: 10rpx;
+}
+
+.insight-current {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 20rpx;
+}
+
+.reveal-btn {
+  width: 100%;
+  padding: 20rpx 40rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.reveal-btn.can-reveal {
+  background: linear-gradient(145deg, #bf00ff 0%, #00d4ff 100%);
+  color: #fff;
+  box-shadow: 0 0 30rpx rgba(191, 0, 255, 0.5);
+}
+
+.reveal-btn.can-reveal:active {
+  transform: scale(0.95);
+}
+
+.reveal-btn.cannot-reveal {
+  background: rgba(100, 100, 100, 0.3);
+  color: #666;
+}
+
+/* 已揭示徽章 */
+.revealed-badge {
+  text-align: center;
+  padding: 20rpx;
+  background: rgba(0, 255, 128, 0.1);
+  border: 2rpx solid rgba(0, 255, 128, 0.3);
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  color: #00ff80;
+  font-weight: bold;
+}
+
+/* 底部提示 */
+.modal-hint {
+  text-align: center;
+  margin-top: 30rpx;
+  font-size: 22rpx;
+  color: #666;
+}
